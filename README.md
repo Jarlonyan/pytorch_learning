@@ -7,3 +7,6 @@
 + 损失函数：
 ![IMAGE](imgs/siamess_loss.png)
 
+其中，Dw是：
+![IMAGE](imgs/siamess_dw.png)
+
