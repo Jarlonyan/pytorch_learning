@@ -17,7 +17,7 @@ import utils
 from dataset import MyDataset
 import siamese_network
 
-def main():
+def train():
     #utils.convert()
     #exit(0)
     train_data = MyDataset(txt=conf.txt_train_data, 
@@ -46,7 +46,7 @@ def main():
             loss_contrastive.backward()
             optimizer.step()
 
-            if i % 1 == 0:
+            if i % 2 == 0:
                 print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data[0])
                 iteration_number += 1
                 counter.append(iteration_number)
@@ -61,6 +61,37 @@ def main():
     #utils.show_plot(counter, loss_history)
     plt.ioff()
     plt.show()
+    torch.save(net, 'siameses_network.pkl')  # 保存整个神经网络的结构和模型参数 
+
+def test():
+    model_path ='siameses_network.pkl'
+    model = torch.load(model_path)
+
+    train_data = MyDataset(txt=conf.txt_train_data, 
+                           transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
+                           should_invert=False)
+    train_dataloader = DataLoader(dataset=train_data, \
+                                  shuffle=True,       \
+                                  batch_size=conf.train_batch_size)
+    net = siamese_network.SiameseNetwork()
+    criterion = siamese_network.ContrastiveLoss()
+
+    data_iter = iter(train_dataloader)
+    img1, img2, label = next(data_iter)
+    output1, output2 = net(img1, img2)
+    #loss_contrastive = criterion(output1, output2, label)
+    print output1
+    #print loss_contrastive
+
+    '''img1, img2, label = data
+    img1, img2, label = Variable(img1), Variable(img2), Variable(label)
+    output1, output2 = net(img1, img2)
+    loss_contrastive = criterion(output1, output2, label)
+    '''
+
+def main():
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
