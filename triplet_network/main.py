@@ -14,6 +14,7 @@ from torch.autograd imprt Variable
 import torch.backends.cudnn as cudnn
 from visdom import Visdom
 import numpy as np
+from triplet_network import Net, Tripletnet
 
 #training settings
 parser = argparse.ArgumentParser(description='pytorch MNIST example')
@@ -43,8 +44,30 @@ parser.add_argument('--name', type=str, default='TripletNet',
 best_acc = 0
 
 def main():
+    global args, best_acc
+    args = parser.parse_args()
+    args.cuda = not args.no_cuda and torch.cuda.is_available()
+    torch.manual_seed(args.seed)
+    if args.cuda:
+        torch.cuda.manual_seed(args.seed)
+    global plotter
+    plotter = VisdomLinePlotter(env_name=args.name)
+    
+    kwargs = {'num_workers':1, 'pin_memory':True} if args.cuda else {}
+    train_loader = torch.utils.data.DataLoader()
 
-
+    model = Net()
+    tnet = Tripletnet(model)
+    if args.cuda:
+        tnet.cuda()
+    if args.resume:
+        if os.path.isfile(args.resume):
+            print ("----> loading checkpoint '{}'".format(args.resume))
+        else:
+            print ("----> no checkpoint found at '{}'".format(args.resume))
+    cudnn.benchmark = True
+    criterion = torch.nn.MarginRankingLoss(margin=args.margin)
+    optimizer = optim.SGD(tnet.parameters(), lr=args.lr, momentum=args.momentum)
 
 if __name__ == "__main__":
     main()
