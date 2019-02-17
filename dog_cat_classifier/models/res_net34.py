@@ -3,7 +3,7 @@ import torch as t
 from torch import nn
 from torch.nn import functional as F
 
-from .BasicModule import BasicModule
+from .basic_module import BasicModule
 
 class ResidualBlock(nn.Module):
     def __init__(self, inchannel, outchannel, stride=1, shortcut=None):
@@ -55,7 +55,6 @@ class ResNet34(BasicModule):
             layers.append(REsidualBlock(outchannel, outchannel))
         
         return nn.Sequential(*layers)
-
 
     def forward(self, x):
         x = self.pre(x)
