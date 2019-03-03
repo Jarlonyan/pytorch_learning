@@ -1,4 +1,4 @@
-
+#coding:utf-8
 from PIL import Image
 import os
 import os.path
@@ -14,6 +14,7 @@ class TripletImageLoader(torch.utils.data.Dataset):
         for line in open(filenames_filename):
             self.file_name_list.append(line.rstrip("\n"))
         triplets = []
+
         for line in open(triplets_file_name):
             triplets.append((line.split()[0], line.split()[1], line.split()[2])) #anchor, far, close
         self.triplets = triplets

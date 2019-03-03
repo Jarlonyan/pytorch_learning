@@ -1,4 +1,4 @@
-
+#coding=utf-8
 # 参考：https://github.com/andreasveit/triplet-network-pytorch
 
 from __future__ import print_function
