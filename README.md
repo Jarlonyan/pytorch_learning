@@ -19,4 +19,39 @@
     数据链接： https://files.cnblogs.com/files/king-lps/att_faces.zip
     首先解压后发现文件夹下共40个文件夹，每个文件夹里有10张pgm图片。这里生成一个包含图片路径的train.txt文件共后续调用：
 
+-------------
+# 2. 猫狗识别
+
++ 代码来源：《深度学习框架：pytorch入门与实践》--作者：陈云
+
+
+
+--------------
+# 3. 简单手势分类器
+
++ 代码来源：https://www.jianshu.com/p/c4723a4409cf
+
+
+-----------------
+# 4. triplet-loss网络
+
++ 代码来源：https://github.com/andreasveit/triplet-network-pytorch
+
+
+----------------
+# 5. word2vec
+
+
+
+-----------------
+# 6. 图片风格迁移
+
+
+
+
+
+
+
+
+
 
