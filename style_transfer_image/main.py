@@ -10,12 +10,11 @@ import style_transfer_model
 
 '''
 实现图像的风格迁移
+代码来源：《深度学习框架:PyTorch入门与实践》--作者：陈云
 '''
 
 def main():
-    print word2vec_model.in_embeddings.weight.data[0]
-    print "end of word2vec"
-    word2vec_model.save_embedding(pd.id2word,"data/embedding.txt")
+    
 
 if __name__ == '__main__':
     main()

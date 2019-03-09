@@ -50,3 +50,5 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
         num = len(fh.readlines())
         fh.close()
         return num
+
+
