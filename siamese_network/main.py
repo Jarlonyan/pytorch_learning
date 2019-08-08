@@ -1,6 +1,6 @@
 # coding=utf-8
 # 参考：https://www.cnblogs.com/king-lps/p/8342452.html
-# 数据下载链接：xxxxx
+# 数据下载链接：https://files.cnblogs.com/files/king-lps/att_faces.zip
 
 import os
 import random
@@ -28,7 +28,7 @@ def train():
                                   batch_size=conf.train_batch_size)
     net = siamese_network.SiameseNetwork()
     criterion = siamese_network.ContrastiveLoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.0003)
+    optimizer = optim.Adam(net.parameters(), lr=0.0006)
 
     counter = []
     loss_history = []
@@ -55,8 +55,8 @@ def train():
                 print counter, '===>', loss_history
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 60))
-                plt.ylim((0, 10))
+                plt.xlim((0, 50))
+                plt.ylim((0, 20))
                 plt.pause(0.08)
     #utils.show_plot(counter, loss_history)
     plt.ioff()
@@ -90,8 +90,8 @@ def test():
     '''
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
