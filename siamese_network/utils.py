@@ -28,7 +28,7 @@ def convert(category="train"):
             for j in range(10):
                 img_path = data_path+'s'+str(i+1)+'/'+str(j+1)+'.pgm'
                 print img_path
-                f.write(img_path+' '+str(i)+'\n')
+                f.write(img_path+' '+str(i+1)+'\n')
         f.close()
     elif category=='test':
         f = open(conf.txt_test_data, 'w')
@@ -40,7 +40,7 @@ def convert(category="train"):
             for j in range(10):
                 img_path = data_path+'s'+str(i+1)+'/'+str(j+1)+'.pgm'
                 print img_path
-                f.write(img_path+' '+str(i)+'\n')
+                f.write(img_path+' '+str(i+1)+'\n')
         f.close()
 
 if __name__ == "__main__":
