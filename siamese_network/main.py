@@ -55,13 +55,13 @@ def train():
                 print counter, '===>', loss_history
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 50))
+                plt.xlim((0, 60))
                 plt.ylim((0, 20))
                 plt.pause(0.08)
     #utils.show_plot(counter, loss_history)
     plt.ioff()
     plt.show()
-    torch.save(net, 'siameses_network.pkl')  # 保存整个神经网络的结构和模型参数 
+    torch.save(net, 'siamese_network.pkl')  # 保存整个神经网络的结构和模型参数 
 
 def test():
     model_path ='siameses_network.pkl'
