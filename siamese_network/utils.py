@@ -17,8 +17,8 @@ def show_plot(iteration, loss):
     plt.plot(iteration, loss)
     plt.show()
 
-def convert(train=True):
-    if(train):
+def convert(category="train"):
+    if category=="train":
         f = open(conf.txt_train_data, 'w')
         data_path = os.path.join(conf.root, 'att_faces/')
         print data_path
@@ -30,7 +30,19 @@ def convert(train=True):
                 print img_path
                 f.write(img_path+' '+str(i)+'\n')
         f.close()
-
+    elif category=='test':
+        f = open(conf.txt_test_data, 'w')
+        data_path = os.path.join(conf.root, 'att_faces/')
+        print data_path
+        if not os.path.exists(data_path):
+            os.makedirs(data_path)
+        for i in range(40):
+            for j in range(10):
+                img_path = data_path+'s'+str(i+1)+'/'+str(j+1)+'.pgm'
+                print img_path
+                f.write(img_path+' '+str(i)+'\n')
+        f.close()
 
 if __name__ == "__main__":
-    convert()
+    #convert("train")
+    convert("test")

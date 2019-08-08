@@ -6,5 +6,7 @@ txt_test_data = 'data/test.txt'
 train_batch_size = 32
 train_number_epochs = 8
 
+root = 'data/'
+
 if __name__ == "__main__":
     pass
