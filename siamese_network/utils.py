@@ -24,8 +24,8 @@ def convert(category="train"):
         print data_path
         if(not os.path.exists(data_path)):
             os.makedirs(data_path)
-        for i in range(1, 40+1):
-            for j in range(1, 10+1):
+        for i in range(40):
+            for j in range(10):
                 img_path = data_path+'s'+str(i+1)+'/'+str(j+1)+'.pgm'
                 print img_path
                 f.write(img_path+' '+str(i)+'\n')
@@ -36,13 +36,13 @@ def convert(category="train"):
         print data_path
         if not os.path.exists(data_path):
             os.makedirs(data_path)
-        for i in range(1, 40+1):
-            for j in range(1, 10+1):
+        for i in range(40):
+            for j in range(10):
                 img_path = data_path+'s'+str(i+1)+'/'+str(j+1)+'.pgm'
                 print img_path
                 f.write(img_path+' '+str(i)+'\n')
         f.close()
 
 if __name__ == "__main__":
-    #convert("train")
+    convert("train")
     convert("test")
