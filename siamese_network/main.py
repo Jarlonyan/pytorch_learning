@@ -60,7 +60,7 @@ def train():
                 print counter, '===>', loss_history
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 60))
+                plt.xlim((0, 300))
                 plt.ylim((0, 20))
                 plt.pause(0.08)
     #utils.show_plot(counter, loss_history)

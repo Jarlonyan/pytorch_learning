@@ -43,7 +43,7 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
             img1 = self.transform(img1)
 
         # 注意一定要返回数据+标签， 这里返回一对图像+label（应由numpy转为tensor）
-        return img0, img1, torch.from_numpy(np.array([int(img1_list[1] != img0_list[1])], dtype=np.float32))
+        return img0, img1, torch.from_numpy(np.array([int(img1_list[1] == img0_list[1])], dtype=np.float32))
 
     def __len__(self):       # 数据总长
         fh = open(self.txt, 'r')
