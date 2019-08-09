@@ -33,7 +33,7 @@ def train():
                                   batch_size=conf.train_batch_size)
     net = siamese_network.SiameseNetwork()
     criterion = siamese_network.ContrastiveLoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.0006)
+    optimizer = optim.Adam(net.parameters(), lr=0.006)
 
     counter = []
     loss_history = []
@@ -51,7 +51,7 @@ def train():
             loss_contrastive.backward()
             optimizer.step()
 
-            if i % 2 == 0:
+            if i % 3 == 0:
                 print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data)
                 iteration_number += 1
                 counter.append(iteration_number)
@@ -60,12 +60,13 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 300))
-                plt.ylim((0, 20))
-                plt.pause(0.08)
+                plt.ylim((0, 50))
+                plt.pause(0.03)
     #utils.show_plot(counter, loss_history)
     plt.ioff()
-    plt.show()
     torch.save(net, 'siamese_network.pkl')  # 保存整个神经网络的结构和模型参数 
+    plt.show()
+    
 
 def imshow(img,text=None,should_save=False):
     npimg = img.numpy()
@@ -88,13 +89,14 @@ def test():
     dataiter = iter(test_dataloader)
     x0,_,_ = next(dataiter)
     
-    for i in range(2):
+    for i in range(10):
         _,x1,label2 = next(dataiter)
         concatenated = torch.cat((x0,x1),0)
     
         output1,output2 = net(Variable(x0),Variable(x1))
         euclidean_distance = F.pairwise_distance(output1, output2)
-        imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]))
+        print euclidean_distance.cpu().data.numpy()[0]
+        imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]))
 
 def main():
     train()
