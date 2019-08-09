@@ -23,8 +23,6 @@ from dataset import MyDataset
 import triplet_network
 
 def train():
-    #utils.convert()
-    #exit(0)
     train_data = MyDataset(txt=conf.txt_train_data, 
                            transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
                            should_invert=False)
@@ -32,11 +30,8 @@ def train():
                                   shuffle=True,       \
                                   batch_size=conf.train_batch_size)
     
-    dataiter = iter(train_dataloader)
-    next(dataiter)
-    return 
-    
-    net = siamese_network.TripletNetwork()
+    basenet = triplet_network.BaseNet()
+    net = triplet_network.TripletNetwork(basenet)
     criterion = torch.nn.MarginRankingLoss(margin = conf.margin)
     optimizer = optim.Adam(net.parameters(), lr=0.006)
 
@@ -48,29 +43,33 @@ def train():
     plt.ion()
     for epoch in range(0, conf.train_number_epochs):
         for i, data in enumerate(train_dataloader, 0):
-            img1, img2, label = data
-            img1, img2, label = Variable(img1), Variable(img2), Variable(label)
-            output1, output2 = net(img1, img2)
-            
+            img_a, img_p, img_n= data
+            img_a, img_p, img_n = Variable(img_a), Variable(img_p), Variable(img_n)
+            dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
+            target = torch.FloatTensor(dist_p.size()).fill_(1)
+            target = Variable(target)
+            loss_triplet = criterion(dist_p, dist_n, target)
+            loss_embed = embedded_xa.norm(2) + embedded_xp.norm(2) + embedded_xn.norm(2)
+            loss = loss_triplet + loss_embed
+
             optimizer.zero_grad()
-            loss_contrastive = criterion(output1, output2, label)
-            loss_contrastive.backward()
+            loss.backward()
             optimizer.step()
 
             if i % 3 == 0:
-                print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data)
+                print "Epoch{}, current loss={}".format(epoch, loss.data)
                 iteration_number += 1
                 counter.append(iteration_number)
-                loss_history.append(loss_contrastive.data)
+                loss_history.append(loss.data)
 
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 250))
                 plt.ylim((0, 60))
                 plt.pause(0.03)
-    #utils.show_plot(counter, loss_history)
+    #end-for
     plt.ioff()
-    torch.save(net, 'siamese_network.pkl')  # 保存整个神经网络的结构和模型参数 
+    torch.save(net, 'triplet_network.pkl')  # 保存整个神经网络的结构和模型参数 
     plt.show()
     
 

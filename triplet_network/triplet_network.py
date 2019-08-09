@@ -6,9 +6,9 @@ import torch.optim as optim
 
 import utils
 
-class Net(nn.Module):
+class BaseNet(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(BaseNet, self).__init__()
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=6)
         self.conv2_drop = nn.Dropout2d()
@@ -23,9 +23,9 @@ class Net(nn.Module):
         x = F.dropout(x, training=self.training)
         return self.fc2(x)
 
-class Tripletnet(nn.Module):
+class TripletNetwork(nn.Module):
     def __init__(self, embeddingnet):
-        super(Tripletnet, self).__init()
+        super(TripletNetwork, self).__init__()
         self.embeddingnet = embeddingnet
 
     def forward(self, xa, xp, xn):
