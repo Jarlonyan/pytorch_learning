@@ -15,6 +15,7 @@ import torch.nn.functional as F
 import torchvision
 import matplotlib.pyplot as plt
 import numpy as np
+from decimal import Decimal
 
 
 import conf
@@ -88,14 +89,17 @@ def test():
         concatenated = torch.cat((img_a, img_p, img_n),0)
         
         dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
-        dist_p = np.float32(disp_p).item()
+    
+        dist_p = dist_p.detach().numpy() 
+        dist_n = dist_n.detach().numpy()
+        text = "dist_p=%.2f"%dist_p+", dist_n=%.2f"%dist_n
         utils.img_show(torchvision.utils.make_grid(concatenated),
-                        'Dissimilarity: {:.2f}'.format(disp_p.cpu().data.numpy()[0]),
+                        'Dissimilarity: %s'%text,
                         color="white")
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()

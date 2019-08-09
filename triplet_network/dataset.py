@@ -25,7 +25,7 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
 
         while True:
             img_n_list = linecache.getline(self.txt, random.randint(1, self.__len__())).strip('\n').split()
-            if img_a_list[1] == img_n_list[1]:
+            if img_a_list[1] != img_n_list[1]:
                 break
 
         # img_list都是大小为2的列表，list[0]为图像, list[1]为label

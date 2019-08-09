@@ -49,7 +49,6 @@ class TripletNetwork(nn.Module):
         self.embeddingnet = embeddingnet
 
     def forward(self, xa, xp, xn):
-        
         embedded_xa = self.embeddingnet(xa)
         embedded_xp = self.embeddingnet(xp)
         embedded_xn = self.embeddingnet(xn)
