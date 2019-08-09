@@ -60,23 +60,14 @@ def train():
 
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 300))
-                plt.ylim((0, 70))
+                plt.xlim((0, 250))
+                plt.ylim((0, 60))
                 plt.pause(0.03)
     #utils.show_plot(counter, loss_history)
     plt.ioff()
     torch.save(net, 'siamese_network.pkl')  # 保存整个神经网络的结构和模型参数 
     plt.show()
     
-
-def imshow(img,text=None,should_save=False):
-    npimg = img.numpy()
-    plt.axis("off")
-    if text:
-        plt.text(75, 8, text, style='italic',fontweight='bold',
-            bbox={'facecolor':'white', 'alpha':0.8, 'pad':10})
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show() 
 
 def test():
     net = torch.load('siamese_network.pkl')
@@ -90,7 +81,7 @@ def test():
     dataiter = iter(test_dataloader)
     x0,_,_ = next(dataiter)
     
-    for i in range(10):
+    for i in range(2):
         _,x1,label2 = next(dataiter)
         concatenated = torch.cat((x0,x1),0)
     
@@ -98,11 +89,12 @@ def test():
         euclidean_distance = F.pairwise_distance(output1, output2)
         print output2
         print euclidean_distance.cpu().data.numpy()[0]
-        imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]))
+        utils.img_show(torchvision.utils.make_grid(concatenated),
+                        'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]))
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
