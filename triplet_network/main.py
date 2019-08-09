@@ -32,6 +32,10 @@ def train():
                                   shuffle=True,       \
                                   batch_size=conf.train_batch_size)
     
+    dataiter = iter(train_dataloader)
+    next(dataiter)
+    return 
+    
     net = siamese_network.TripletNetwork()
     criterion = torch.nn.MarginRankingLoss(margin = conf.margin)
     optimizer = optim.Adam(net.parameters(), lr=0.006)
@@ -103,8 +107,8 @@ def test():
                         color=color)
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
