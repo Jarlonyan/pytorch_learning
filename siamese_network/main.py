@@ -52,12 +52,11 @@ def train():
             optimizer.step()
 
             if i % 2 == 0:
-                print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data[0])
+                print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data)
                 iteration_number += 1
                 counter.append(iteration_number)
-                loss_history.append(loss_contrastive.data[0])
+                loss_history.append(loss_contrastive.data)
 
-                print counter, '===>', loss_history
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 300))
@@ -84,12 +83,12 @@ def test():
                            should_invert=False)
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
-                                  batch_size=conf.train_batch_size)
+                                  batch_size=1)
 
     dataiter = iter(test_dataloader)
     x0,_,_ = next(dataiter)
-
-    for i in range(10):
+    
+    for i in range(2):
         _,x1,label2 = next(dataiter)
         concatenated = torch.cat((x0,x1),0)
     
@@ -98,8 +97,8 @@ def test():
         imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]))
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
