@@ -47,6 +47,7 @@ def train():
             img1, img2, label = Variable(img1), Variable(img2), Variable(label)
             output1, output2 = net(img1, img2)
             
+            optimizer.zero_grad()
             loss_contrastive = criterion(output1, output2, label)
             loss_contrastive.backward()
             optimizer.step()
@@ -60,7 +61,7 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 300))
-                plt.ylim((0, 50))
+                plt.ylim((0, 70))
                 plt.pause(0.03)
     #utils.show_plot(counter, loss_history)
     plt.ioff()
