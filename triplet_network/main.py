@@ -1,73 +1,110 @@
-#coding=utf-8
-# 参考：https://github.com/andreasveit/triplet-network-pytorch
+# coding=utf-8
+# 参考：https://www.cnblogs.com/king-lps/p/8342452.html
+# 数据下载链接：https://files.cnblogs.com/files/king-lps/att_faces.zip
 
-from __future__ import print_function
-import argparse
 import os
-import shutil
+import random
+import PIL.ImageOps
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
 import torch.optim as optim
-from torchvision import datasets, transforms
-from torch.autograd imprt Variable
-import torch.backends.cudnn as cudnn
-from visdom import Visdom
+from torch.autograd import Variable
+import torchvision.datasets as dset
+import torch.nn.functional as F
+import torchvision
+import matplotlib.pyplot as plt
 import numpy as np
-from triplet_network import Net, Tripletnet
 
-#training settings
-parser = argparse.ArgumentParser(description='pytorch MNIST example')
-parser.add_argument('--batch_size', type=int, default=64, metavar='N',
-                    help='input batch size for training(default:64)')
-parser.add_argument('--test_batch_size', type=int, default=1000, metavar='N',
-                    help='input batch size for testing(default:1000)')
-parser.add_argument('--epochs', type=int, default=10, metavar='N',
-                    help='number of epochs to train(default:10)')
-parser.add_argument('--lr', type=float, default=0.01, metavar='LR',
-                    help='learning rate(default:0.01)')
-parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
-                    help='SGD momentum(default:0.5)')
-parser.add_argument('--no-cuda', action='store_true', default=False,
-                    help='enables CUDA training')
-parser.add_argument('--seed', type=int, default=1, metavar='S',
-                    help='random seed(default:1)')
-parser.add_argument('--log_interval', type=int, default=20, metavar='N',
-                    help='how many batches to wait before logging training status')
-parser.add_argument('--margin', type=float, default=0.2, metavar='M',
-                    help='margin for triplet loss(default:0.2)')
-parser.add_argument('--resume', type=str, default='', 
-                    help='path to latest checkpoint(default:none)')
-parser.add_argument('--name', type=str, default='TripletNet', 
-                    help='name of experiment')
 
-best_acc = 0
+import conf
+import utils
+from dataset import MyDataset
+import triplet_network
+
+def train():
+    #utils.convert()
+    #exit(0)
+    train_data = MyDataset(txt=conf.txt_train_data, 
+                           transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
+                           should_invert=False)
+    train_dataloader = DataLoader(dataset=train_data, \
+                                  shuffle=True,       \
+                                  batch_size=conf.train_batch_size)
+    
+    net = siamese_network.TripletNetwork()
+    criterion = torch.nn.MarginRankingLoss(margin = conf.margin)
+    optimizer = optim.Adam(net.parameters(), lr=0.006)
+
+    counter = []
+    loss_history = []
+    iteration_number = 0
+
+    import matplotlib.pyplot as plt
+    plt.ion()
+    for epoch in range(0, conf.train_number_epochs):
+        for i, data in enumerate(train_dataloader, 0):
+            img1, img2, label = data
+            img1, img2, label = Variable(img1), Variable(img2), Variable(label)
+            output1, output2 = net(img1, img2)
+            
+            optimizer.zero_grad()
+            loss_contrastive = criterion(output1, output2, label)
+            loss_contrastive.backward()
+            optimizer.step()
+
+            if i % 3 == 0:
+                print "Epoch{}, current loss={}".format(epoch, loss_contrastive.data)
+                iteration_number += 1
+                counter.append(iteration_number)
+                loss_history.append(loss_contrastive.data)
+
+                plt.plot(counter, loss_history)
+                plt.draw()
+                plt.xlim((0, 250))
+                plt.ylim((0, 60))
+                plt.pause(0.03)
+    #utils.show_plot(counter, loss_history)
+    plt.ioff()
+    torch.save(net, 'siamese_network.pkl')  # 保存整个神经网络的结构和模型参数 
+    plt.show()
+    
+
+def test():
+    net = torch.load('siamese_network.pkl')
+    test_data = MyDataset(txt=conf.txt_test_data, 
+                           transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
+                           should_invert=False)
+    test_dataloader = DataLoader(dataset=test_data, \
+                                  shuffle=True,       \
+                                  batch_size=1)
+
+    dataiter = iter(test_dataloader)
+    x0,_,_ = next(dataiter)
+    
+    for i in range(10):
+        _,x1,label2 = next(dataiter)
+        concatenated = torch.cat((x0,x1),0)
+    
+        output1,output2 = net(Variable(x0),Variable(x1))
+        euclidean_distance = F.pairwise_distance(output1, output2)
+        
+        dist = euclidean_distance.cpu().data.numpy()[0]
+        dist = np.float32(dist).item()
+        print dist, type(dist)
+        
+        if dist < 1.0:
+            color = "red"
+        else:
+            color = "white"
+
+        utils.img_show(torchvision.utils.make_grid(concatenated),
+                        'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]),
+                        color=color)
 
 def main():
-    global args, best_acc
-    args = parser.parse_args()
-    args.cuda = not args.no_cuda and torch.cuda.is_available()
-    torch.manual_seed(args.seed)
-    if args.cuda:
-        torch.cuda.manual_seed(args.seed)
-    global plotter
-    plotter = VisdomLinePlotter(env_name=args.name)
-    
-    kwargs = {'num_workers':1, 'pin_memory':True} if args.cuda else {}
-    train_loader = torch.utils.data.DataLoader()
-
-    model = Net()
-    tnet = Tripletnet(model)
-    if args.cuda:
-        tnet.cuda()
-    if args.resume:
-        if os.path.isfile(args.resume):
-            print ("----> loading checkpoint '{}'".format(args.resume))
-        else:
-            print ("----> no checkpoint found at '{}'".format(args.resume))
-    cudnn.benchmark = True
-    criterion = torch.nn.MarginRankingLoss(margin=args.margin)
-    optimizer = optim.SGD(tnet.parameters(), lr=args.lr, momentum=args.momentum)
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
