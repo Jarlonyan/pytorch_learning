@@ -64,8 +64,8 @@ def train():
 
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 200))
-                plt.ylim((0, 35))
+                plt.xlim((0, 150))
+                plt.ylim((0, 25))
                 plt.pause(0.03)
     #end-for
     plt.ioff()
@@ -82,13 +82,15 @@ def test():
                                   shuffle=True,       \
                                   batch_size=1)
     
-    for i in range(10):
+    dataiter = iter(test_dataloader)
+    for i in range(2):
         img_a, img_p, img_n = next(dataiter)
         concatenated = torch.cat((img_a, img_p, img_n),0)
+        
         dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
         dist_p = np.float32(disp_p).item()
         utils.img_show(torchvision.utils.make_grid(concatenated),
-                        'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]),
+                        'Dissimilarity: {:.2f}'.format(disp_p.cpu().data.numpy()[0]),
                         color="white")
 
 def main():
