@@ -64,8 +64,8 @@ def train():
 
                 plt.plot(counter, loss_history)
                 plt.draw()
-                plt.xlim((0, 250))
-                plt.ylim((0, 60))
+                plt.xlim((0, 200))
+                plt.ylim((0, 35))
                 plt.pause(0.03)
     #end-for
     plt.ioff()
@@ -74,36 +74,22 @@ def train():
     
 
 def test():
-    net = torch.load('siamese_network.pkl')
+    net = torch.load('triplet_network.pkl')
     test_data = MyDataset(txt=conf.txt_test_data, 
                            transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
                            should_invert=False)
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
                                   batch_size=1)
-
-    dataiter = iter(test_dataloader)
-    x0,_,_ = next(dataiter)
     
     for i in range(10):
-        _,x1,label2 = next(dataiter)
-        concatenated = torch.cat((x0,x1),0)
-    
-        output1,output2 = net(Variable(x0),Variable(x1))
-        euclidean_distance = F.pairwise_distance(output1, output2)
-        
-        dist = euclidean_distance.cpu().data.numpy()[0]
-        dist = np.float32(dist).item()
-        print dist, type(dist)
-        
-        if dist < 1.0:
-            color = "red"
-        else:
-            color = "white"
-
+        img_a, img_p, img_n = next(dataiter)
+        concatenated = torch.cat((img_a, img_p, img_n),0)
+        dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
+        dist_p = np.float32(disp_p).item()
         utils.img_show(torchvision.utils.make_grid(concatenated),
                         'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]),
-                        color=color)
+                        color="white")
 
 def main():
     train()
