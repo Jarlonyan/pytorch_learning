@@ -95,6 +95,7 @@ def test():
     
         output1,output2 = net(Variable(x0),Variable(x1))
         euclidean_distance = F.pairwise_distance(output1, output2)
+        print output2
         print euclidean_distance.cpu().data.numpy()[0]
         imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]))
 

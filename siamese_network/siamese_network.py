@@ -30,11 +30,11 @@ class SiameseNetwork(nn.Module):
         )
 
         self.fc1 = nn.Sequential(
-            nn.Linear(8*100*100, 500),
+            nn.Linear(8*100*100, 512),
             nn.ReLU(inplace=True),
-            nn.Linear(500, 500),
+            nn.Linear(512, 512),
             nn.ReLU(inplace=True),
-            nn.Linear(500, 5)
+            nn.Linear(512, 32)
         )
 
     def forward_once(self, x):
@@ -50,7 +50,7 @@ class SiameseNetwork(nn.Module):
 
 # 定制化的对比loss
 class ContrastiveLoss(torch.nn.Module):
-    def __init__(self, margin=2.0):
+    def __init__(self, margin=10.0):
         super(ContrastiveLoss, self).__init__()
         self.margin = margin
 
