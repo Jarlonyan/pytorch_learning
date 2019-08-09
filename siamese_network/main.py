@@ -81,16 +81,25 @@ def test():
     dataiter = iter(test_dataloader)
     x0,_,_ = next(dataiter)
     
-    for i in range(2):
+    for i in range(10):
         _,x1,label2 = next(dataiter)
         concatenated = torch.cat((x0,x1),0)
     
         output1,output2 = net(Variable(x0),Variable(x1))
         euclidean_distance = F.pairwise_distance(output1, output2)
-        print output2
-        print euclidean_distance.cpu().data.numpy()[0]
+        
+        dist = euclidean_distance.cpu().data.numpy()[0]
+        dist = np.float32(dist).item()
+        print dist, type(dist)
+        
+        if dist < 1.0:
+            color = "red"
+        else:
+            color = "white"
+
         utils.img_show(torchvision.utils.make_grid(concatenated),
-                        'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]))
+                        'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0]),
+                        color=color)
 
 def main():
     #train()
