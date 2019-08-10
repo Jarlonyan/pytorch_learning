@@ -34,7 +34,7 @@ def train():
     basenet = triplet_network.BaseNet()
     basenet3 = triplet_network.BaseNet3()
     net = triplet_network.TripletNetwork(basenet3)
-    criterion = torch.nn.RankingLoss(margin = conf.margin)
+    criterion = torch.nn.MarginRankingLoss(margin = conf.margin)
     optimizer = optim.Adam(net.parameters(), lr=0.006)
 
     counter = []

@@ -63,13 +63,15 @@ class BaseNet2(nn.Module):
 
 class BaseNet3(nn.Module):
     def __init__(self):
+        #import pdb; pdb.set_trace()
+        super(BaseNet3, self ).__init__() 
         self.model = models.resnet18(pretrained=True)
-        fc_features = model.fc.in_features
+        fc_features = self.model.fc.in_features
         self.model.fc = nn.Linear(fc_features, 32)
 
     def forward(self, x):
         embed = self.model(x)
-        return x
+        return embed
 
 class TripletNetwork(nn.Module):
     def __init__(self, embeddingnet):
