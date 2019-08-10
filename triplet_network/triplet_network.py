@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+import torchvision.models as models
 
 import utils
 
@@ -42,6 +43,33 @@ class BaseNet(nn.Module):
         output = output.view(x.size()[0], -1)
         output = self.fc1(output)
         return output
+    
+class BaseNet2(nn.Module):
+    def __init__(self):
+        super(BaseNet2, self).__init__()
+        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+        self.conv2_drop = nn.Dropout2d()
+        self.fc1 = nn.Linear(9680, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def forward(self, x):
+        x = F.relu(F.max_pool2d(self.conv1(x), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(x.size()[0], -1)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        return self.fc2(x)
+
+class BaseNet3(nn.Module):
+    def __init__(self):
+        self.model = models.resnet18(pretrained=True)
+        fc_features = model.fc.in_features
+        self.model.fc = nn.Linear(fc_features, 32)
+
+    def forward(self, x):
+        embed = self.model(x)
+        return x
 
 class TripletNetwork(nn.Module):
     def __init__(self, embeddingnet):

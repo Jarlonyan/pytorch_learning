@@ -32,8 +32,9 @@ def train():
                                   batch_size=conf.train_batch_size)
     
     basenet = triplet_network.BaseNet()
-    net = triplet_network.TripletNetwork(basenet)
-    criterion = torch.nn.MarginRankingLoss(margin = conf.margin)
+    basenet3 = triplet_network.BaseNet3()
+    net = triplet_network.TripletNetwork(basenet3)
+    criterion = torch.nn.RankingLoss(margin = conf.margin)
     optimizer = optim.Adam(net.parameters(), lr=0.006)
 
     counter = []
@@ -49,9 +50,9 @@ def train():
             dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
             target = torch.FloatTensor(dist_p.size()).fill_(1)
             target = Variable(target)
-            loss_triplet = criterion(dist_p, dist_n, target)
+            loss_triplet = criterion(dist_n, dist_p, target)
             loss_embed = embedded_xa.norm(2) + embedded_xp.norm(2) + embedded_xn.norm(2)
-            loss = loss_triplet + loss_embed
+            loss = loss_triplet + 0.001*loss_embed
 
             optimizer.zero_grad()
             loss.backward()
@@ -66,7 +67,7 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 150))
-                plt.ylim((0, 25))
+                plt.ylim((0, 5))
                 plt.pause(0.03)
     #end-for
     plt.ioff()
@@ -84,7 +85,7 @@ def test():
                                   batch_size=1)
     
     dataiter = iter(test_dataloader)
-    for i in range(2):
+    for i in range(16):
         img_a, img_p, img_n = next(dataiter)
         concatenated = torch.cat((img_a, img_p, img_n),0)
         
@@ -94,12 +95,12 @@ def test():
         dist_n = dist_n.detach().numpy()
         text = "dist_p=%.2f"%dist_p+", dist_n=%.2f"%dist_n
         utils.img_show(torchvision.utils.make_grid(concatenated),
-                        'Dissimilarity: %s'%text,
+                       'Dissimilarity: %s'%text,
                         color="white")
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
