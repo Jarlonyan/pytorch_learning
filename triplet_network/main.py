@@ -25,7 +25,7 @@ import triplet_network
 
 def train():
     train_data = MyDataset(txt=conf.txt_train_data, 
-                           transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
+                           transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),  \
                            should_invert=False)
     train_dataloader = DataLoader(dataset=train_data, \
                                   shuffle=True,       \
@@ -78,7 +78,7 @@ def train():
 def test():
     net = torch.load('triplet_network.pkl')
     test_data = MyDataset(txt=conf.txt_test_data, 
-                           transform=transforms.Compose([transforms.Resize((100, 100)), transforms.ToTensor()]),  \
+                           transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),  \
                            should_invert=False)
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
