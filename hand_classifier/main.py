@@ -32,7 +32,7 @@ def train():
                                   batch_size=conf.train_batch_size)
     
     net = model.BaseNet()
-    criterion = torch.nn.BCELoss()
+    criterion = torch.nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=0.006)
 
     counter = []
@@ -66,12 +66,12 @@ def train():
                 #plt.pause(0.03)
     #end-for
     #plt.ioff()
-    torch.save(net, 'triplet_network.pkl')  # 保存整个神经网络的结构和模型参数 
+    torch.save(net, 'hand_classifier_model.pkl')  # 保存整个神经网络的结构和模型参数 
     #plt.show()
     
 
 def test():
-    net = torch.load('triplet_network.pkl_res152')
+    net = torch.load('hand_classifier_model.pkl')
     test_data = MyDataset(txt=conf.txt_test_data, 
                            transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),  \
                            should_invert=False)
@@ -81,21 +81,13 @@ def test():
     
     dataiter = iter(test_dataloader)
     for i in range(16):
-        img_a, img_p, img_n = next(dataiter)
-        concatenated = torch.cat((img_a, img_p, img_n),0)
-        
-        dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
-    
-        dist_p = dist_p.detach().numpy() 
-        dist_n = dist_n.detach().numpy()
-        text = "dist_p=%.2f"%dist_p+", dist_n=%.2f"%dist_n
-        utils.img_show(torchvision.utils.make_grid(concatenated),
-                       'Dissimilarity: %s'%text,
-                        color="white")
+        img, label = next(dataiter)
+        y_head = net(img)
+        print y_head    
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
