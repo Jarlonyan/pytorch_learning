@@ -27,7 +27,7 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
         if self.transform is not None:  # 非常方便的transform操作，在实例化时可以进行任意定制
             img = self.transform(img)
 
-        return img, torch.from_numpy(np.array([label], dtype=np.int32))
+        return img, label #@torch.from_numpy(np.array([label], dtype=np.long))
 
     def __len__(self):       # 数据总长
         fh = open(self.txt, 'r')

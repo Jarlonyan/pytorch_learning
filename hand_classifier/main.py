@@ -39,35 +39,34 @@ def train():
     loss_history = []
     iteration_number = 0
 
-    #import matplotlib.pyplot as plt
-    #plt.ion()
+    plt.ion()
     for epoch in range(0, conf.train_number_epochs):
         for i, data in enumerate(train_dataloader, 0):
             img, y = data
             img = Variable(img)
             y_head = net(img)
 
-            loss = criterion(y, y_head)
+            loss = criterion(y_head, y)
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            if i % 3 == 0:
+            if i % 2 == 0:
                 print "Epoch{}, current loss={}".format(epoch, loss.data)
                 iteration_number += 1
                 counter.append(iteration_number)
                 loss_history.append(loss.data)
 
-                #plt.plot(counter, loss_history)
-                #plt.draw()
-                #plt.xlim((0, 100))
-                #plt.ylim((0, 0.7))
-                #plt.pause(0.03)
+                plt.plot(counter, loss_history)
+                plt.draw()
+                plt.xlim((0, 100))
+                plt.ylim((0, 4))
+                plt.pause(0.03)
     #end-for
-    #plt.ioff()
+    plt.ioff()
     torch.save(net, 'hand_classifier_model.pkl')  # 保存整个神经网络的结构和模型参数 
-    #plt.show()
+    plt.show()
     
 
 def test():
