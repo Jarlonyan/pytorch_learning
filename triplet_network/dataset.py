@@ -33,18 +33,10 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
         img_a = Image.open(img_a_list[0])
         img_p = Image.open(img_p_list[0])
         img_n = Image.open(img_n_list[0])
-        img_a = img_a.convert("RGB")  # 转为灰度L
+        img_a = img_a.convert("RGB")  # 转为灰度是L, 转成3通道是RGB
         img_p = img_p.convert("RGB")
         img_n = img_n.convert("RGB")
         
-        trans = transforms.Compose([
-                transforms.Resize(224)
-            ]
-        )
-        img_a = trans(img_a)
-        img_p = trans(img_p)
-        img_n = trans(img_n)
-
         if self.transform is not None:  # 非常方便的transform操作，在实例化时可以进行任意定制
             img_a = self.transform(img_a)
             img_p = self.transform(img_p)

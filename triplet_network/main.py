@@ -68,7 +68,7 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 100))
-                plt.ylim((0, 0.3))
+                plt.ylim((0, 0.7))
                 plt.pause(0.03)
     #end-for
     plt.ioff()
@@ -100,8 +100,8 @@ def test():
                         color="white")
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()

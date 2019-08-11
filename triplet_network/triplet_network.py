@@ -68,12 +68,16 @@ class BaseNet3(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = False
         fc_features = self.model.fc.in_features
-        self.model.fc = nn.Linear(fc_features, 32)
+        self.model.fc = nn.Linear(fc_features, 64)
+
+        self.fc1 = nn.Linear(128, 64)
+        self.fc2 = nn.Linear(64, 32)
 
     def forward(self, x):
-        #torchvision.transforms.Resize(224, interpolation=2)
-        embed = self.model(x)
-        return embed
+        x = self.model(x)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
 
 class TripletNetwork(nn.Module):
     def __init__(self, embeddingnet):
