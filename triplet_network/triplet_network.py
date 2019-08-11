@@ -68,7 +68,7 @@ class BaseNet3(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = False
         fc_features = self.model.fc.in_features
-        self.model.fc = nn.Linear(fc_features, 64)
+        self.model.fc = nn.Linear(fc_features, 128)
 
         self.fc1 = nn.Linear(128, 64)
         self.fc2 = nn.Linear(64, 32)
