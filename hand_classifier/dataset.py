@@ -17,32 +17,17 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
     def __getitem__(self, index):
         line = linecache.getline(self.txt, random.randint(1, self.__len__()))   # 随机选择一个人脸
         line.strip('\n')
-        img_a_list = line.split()
+        img_list = line.split()
         
-        while True:
-            img_p_list = linecache.getline(self.txt, random.randint(1, self.__len__())).strip('\n').split()
-            if img_a_list[1] == img_p_list[1]:
-                break
-
-        while True:
-            img_n_list = linecache.getline(self.txt, random.randint(1, self.__len__())).strip('\n').split()
-            if img_a_list[1] != img_n_list[1]:
-                break
-
         # img_list都是大小为2的列表，list[0]为图像, list[1]为label
-        img_a = Image.open(img_a_list[0])
-        img_p = Image.open(img_p_list[0])
-        img_n = Image.open(img_n_list[0])
-        img_a = img_a.convert("RGB")  # 转为灰度是L, 转成3通道是RGB
-        img_p = img_p.convert("RGB")
-        img_n = img_n.convert("RGB")
+        img = Image.open(img_list[0])
+        label = int(img_list[1])
+        #img = img.convert("RGB")  # 转为灰度是L, 转成3通道是RGB
         
         if self.transform is not None:  # 非常方便的transform操作，在实例化时可以进行任意定制
-            img_a = self.transform(img_a)
-            img_p = self.transform(img_p)
-            img_n = self.transform(img_n)
+            img = self.transform(img)
 
-        return img_a, img_p, img_n
+        return img, torch.from_numpy(np.array([label], dtype=np.int32))
 
     def __len__(self):       # 数据总长
         fh = open(self.txt, 'r')

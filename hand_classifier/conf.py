@@ -8,7 +8,5 @@ train_number_epochs = 20
 
 root = 'images/'
 
-margin = 0.2
-
 if __name__ == "__main__":
     pass
