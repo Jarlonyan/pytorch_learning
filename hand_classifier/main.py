@@ -26,7 +26,7 @@ import model
 def train():
     train_data = MyDataset(txt=conf.txt_train_data, 
                            transform=transforms.Compose([transforms.Resize((224, 224)), \
-                                                         transforms.ToTensor()]),  \
+                                                         transforms.ToTensor(),  \
                                                          transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])]),  \
                            should_invert=False)
     train_dataloader = DataLoader(dataset=train_data, \
@@ -86,7 +86,13 @@ def test():
     for i in range(16):
         img, label = next(dataiter)
         y_head = net(img)
-        print y_head    
+        print y_head
+        dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
+ 
+        y_head = y_head.tolist()
+        idx = y_head.index(max(y_head))
+        text = "label="+str(idx)
+        utils.img_show(img, text, color="white") 
 
 def main():
     train()
