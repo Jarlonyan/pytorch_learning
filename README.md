@@ -13,6 +13,9 @@
 其中，m为容忍度， Dw为两张图片的欧氏距离：
 ![IMAGE](imgs/siamess_dw.png)
 
++ 环境：
+    torchversion: 0.2.1
+    torch: 1.2.0
 
 + 数据
     数据采用的是AT&T人脸数据。共40个人，每个人有10张脸。

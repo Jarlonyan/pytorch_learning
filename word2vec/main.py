@@ -48,7 +48,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.data[0]
+            running_loss += loss.data
             if i%80 == 79:
                 print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss)
                 running_loss = 0.0

@@ -63,7 +63,7 @@ class BaseNet2(nn.Module):
 
 class BaseNet3(nn.Module):
     def __init__(self):
-        super(BaseNet3, self ).__init__() 
+        super(BaseNet3, self).__init__()
         self.model = models.resnet152(pretrained=True) #resnet18, resnet152
         for param in self.model.parameters():
             param.requires_grad = False
@@ -75,6 +75,7 @@ class BaseNet3(nn.Module):
 
     def forward(self, x):
         x = self.model(x)
+        # x = F.relu(x)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
