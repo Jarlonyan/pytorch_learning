@@ -25,7 +25,9 @@ import model
 
 def train():
     train_data = MyDataset(txt=conf.txt_train_data, 
-                           transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),  \
+                           transform=transforms.Compose([transforms.Resize((224, 224)), \
+                                                         transforms.ToTensor()]),  \
+                                                         transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])]),  \
                            should_invert=False)
     train_dataloader = DataLoader(dataset=train_data, \
                                   shuffle=True,       \
@@ -72,7 +74,9 @@ def train():
 def test():
     net = torch.load('hand_classifier_model.pkl')
     test_data = MyDataset(txt=conf.txt_test_data, 
-                           transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),  \
+                           transform=transforms.Compose([transforms.Resize((224, 224)),  \
+                                                        transforms.ToTensor(),            \
+                                                        transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])]),  \
                            should_invert=False)
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
