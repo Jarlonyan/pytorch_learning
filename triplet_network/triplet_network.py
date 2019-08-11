@@ -64,7 +64,9 @@ class BaseNet2(nn.Module):
 class BaseNet3(nn.Module):
     def __init__(self):
         super(BaseNet3, self ).__init__() 
-        self.model = models.resnet18(pretrained=True) #resnet18
+        self.model = models.resnet152(pretrained=True) #resnet18, resnet152
+        for param in self.model.parameters():
+            param.requires_grad = False
         fc_features = self.model.fc.in_features
         self.model.fc = nn.Linear(fc_features, 32)
 
