@@ -54,8 +54,8 @@ def train():
             loss.backward()
             optimizer.step()
 
-            if i % 2 == 0:
-                print "Epoch{}, current loss={}".format(epoch, loss.data)
+            if True:   #i % 1 == 0:
+                print "Epoch={}, i={}, current loss={}".format(epoch, i, loss.data)
                 iteration_number += 1
                 counter.append(iteration_number)
                 loss_history.append(loss.data)
@@ -86,13 +86,13 @@ def test():
     for i in range(16):
         img, label = next(dataiter)
         y_head = net(img)
-        print y_head
-        dist_p, dist_n, embedded_xa, embedded_xp, embedded_xn = net(img_a, img_p, img_n)
- 
-        y_head = y_head.tolist()
+        y_head = y_head[0].tolist()
+
+        #print y_head
         idx = y_head.index(max(y_head))
-        text = "label="+str(idx)
-        utils.img_show(img, text, color="white") 
+        text = "output="+str(idx)+", label="+str(int(label))
+        print text #utils.img_show(img, text, color="white")
+    #end-for
 
 def main():
     train()
