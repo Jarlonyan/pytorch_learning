@@ -75,7 +75,7 @@ class BaseNet3(nn.Module):
 
     def forward(self, x):
         x = self.model(x)
-        # x = F.relu(x)
+        x = F.relu(x)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
