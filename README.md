@@ -50,9 +50,32 @@
 # 6. 图片风格迁移
 
 
+# 7、参考
 
++ [【参考1】MorvanZhou/PyTorch-Tutorial](https://github.com/MorvanZhou/PyTorch-Tutorial)
 
-# 4、pytorch环境搭建
++ [【参考2】Alex Smola的GAN入门(翻译)](https://xyang35.github.io/2017/08/22/GAN-2/)
+
++ [【参考3】github gan by xyang35](https://github.com/xyang35/Introduction-to-GAN)
+
++ [【参考4】Pytorch实现skip-gram模型训练word2vec](https://cloud.tencent.com/developer/article/1087003)
+
++ [【参考5】Word2Vec原理之负采样算法](http://qiancy.com/2016/08/24/word2vec-negative-sampling/)
+
++ [【参考6】Implementing word2vec in PyTorch (skip-gram model)](https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb)
+
+# 8、数据集
+
++ cifar-10数据集
+    + cifar-10介绍
+
+        该数据集共有60000张彩色图像，这些图像是32*32，分为10个类，每类6000张图。这里面有50000张用于训练，构成了5个训练批，
+         每一批10000张图；另外10000用于测试，单独构成一批。测试批的数据里，取自10类中的每一类，每一类随机取1000张。
+         抽剩下的就随机排列组成了训练批。注意一个训练批中的各类图像并不一定数量相同，总的来看训练批，每一类都有5000张图
+
+    + [cifar-10下载地址](http://www.cs.toronto.edu/~kriz/cifar.html)
+
+# 9、pytorch环境搭建
 +  mac下安装pytorch 
     + 安装pytorch
        ```shell
