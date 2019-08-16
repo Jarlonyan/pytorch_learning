@@ -28,7 +28,7 @@ class NetG(nn.Module):
         self.layer4 = nn.Sequential(
             nn.ConvTranspose2d(ngf*2, ngf, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf),
-            nn.ReLU(inplae=True)
+            nn.ReLU(inplace=True)
         ) 
         #layer5输出尺寸3x96x96
         self.layer5 = nn.Sequential(
@@ -68,16 +68,16 @@ class NetD(nn.Module):
             nn.BatchNorm2d(ndf*8),
             nn.LeakyReLU(0.2, inplace=True)
         )
-        self.layer5 = nn.sequential(
+        self.layer5 = nn.Sequential(
             nn.Conv2d(ndf*8, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
         )
 
-        def forward(self,x):
-            x = self.layer1(x)
-            x = self.layer2(x)
-            x = self.layer3(x)
-            x = self.layer4(x)
-            x = self.layer5(x)
-            return x
+    def forward(self,x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        x = self.layer5(x)
+        return x
 

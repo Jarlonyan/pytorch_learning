@@ -10,6 +10,6 @@ epoch = 25
 lr = 0.0002
 beta1 = 0.5
 data_path = "data/"
-outf = "imgs/"
+outf = "images/"
 
 

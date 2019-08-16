@@ -11,7 +11,7 @@ from model import NetD,NetG
 import conf
 
 transforms = torchvision.transforms.Compose([
-    torchvision.transfroms.Scale(conf.image_size),
+    torchvision.transforms.Resize(conf.image_size),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))
 ])
