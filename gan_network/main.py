@@ -37,13 +37,12 @@ def train():
 
     for epoch in range(1, conf.epoch+1):
         for i,(imgs,_) in enumerate(dataloader):
-            #固定G，训练D
+            #step1:固定G，训练D
             optimizerD.zero_grad() 
             output = netD(imgs) #让D尽可能把真图片识别为1
             label.data.fill_(real_label)
             errD_real = criterion(output, label)
             errD_real.backward()
-
             #让D尽可能把假图判别为0
             label.data.fill_(fake_label)
             noise = torch.randn(conf.batch_size, conf.nz, 1, 1)
@@ -54,7 +53,7 @@ def train():
             errD = errD_fake + errD_real
             optimizerD.step()
 
-            #固定判别器D，训练生成器G
+            #step2:固定判别器D，训练生成器G
             optimizerG.zero_grad()
             label.data.fill_(real_label) #让D尽可能把G生成的假图判别为1
             output = netD(fake)
