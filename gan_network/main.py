@@ -6,6 +6,7 @@ import torchvision
 import torchvision.utils
 import torch.nn as nn
 from random import randint
+from torchvision.utils import save_image
 
 from model import NetD,NetG
 import conf
@@ -65,9 +66,9 @@ def train():
                 rate = i*1.0/len(dataloader)*100
                 print "epoch={}, i={}, N={}, rate={}%, errD={}, errG={}".format(epoch, i, len(dataloader), rate, errD, errG)
         #end-for
-        torch.utils.save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.outf,epoch), normalize=True)
-        torch.save(negG.state_dict(), '%s/netG_%03d.pth' % (conf.outf,epoch))
-        torch.save(negD.state_dict(), '%s/netD_%03d.pth' % (conf.outf,epoch))
+        save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.outf,epoch), normalize=True)
+        torch.save(netG.state_dict(), '%s/netG_%03d.pth' % (conf.outf,epoch))
+        torch.save(netD.state_dict(), '%s/netD_%03d.pth' % (conf.outf,epoch))
 
 def main():
     train()
