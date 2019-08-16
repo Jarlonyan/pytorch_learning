@@ -66,9 +66,21 @@ def train():
                 rate = i*1.0/len(dataloader)*100
                 print "epoch={}, i={}, N={}, rate={}%, errD={}, errG={}".format(epoch, i, len(dataloader), rate, errD, errG)
         #end-for
-        save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.outf,epoch), normalize=True)
-        torch.save(netG.state_dict(), '%s/netG_%03d.pth' % (conf.outf,epoch))
-        torch.save(netD.state_dict(), '%s/netD_%03d.pth' % (conf.outf,epoch))
+        save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.checkpoints,epoch), normalize=True)
+        torch.save(netG.state_dict(), '%s/netG_%03d.pth' % (conf.checkpoints,epoch))
+        torch.save(netD.state_dict(), '%s/netD_%03d.pth' % (conf.checkpoints,epoch))
+
+def test():
+    dataset = torchvision.datasets.ImageFolder(conf.data_path, transform=transforms)   
+    dataloader = torch.utils.data.DataLoader(
+        dataset = dataset,
+        batch_size = conf.batch_size,
+        shuffle = True,
+        drop_last = True
+    )
+    netG = NetG(conf.ngf, conf.nz)
+    netD = NetD(conf.ndf)
+    
 
 def main():
     train()
