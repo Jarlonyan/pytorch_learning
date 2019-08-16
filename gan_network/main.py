@@ -37,7 +37,8 @@ def train():
 
     for epoch in range(1, conf.epoch+1):
         for i,(imgs,_) in enumerate(dataloader):
-            optimizerD.zero_grad() #固定G，训练D
+            #固定G，训练D
+            optimizerD.zero_grad() 
             output = netD(imgs) #让D尽可能把真图片识别为1
             label.data.fill_(real_label)
             errD_real = criterion(output, label)
