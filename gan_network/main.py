@@ -7,6 +7,13 @@ import torchvision.utils
 import torch.nn as nn
 from random import randint
 from torchvision.utils import save_image
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+handler = logging.FileHandler('output.log')
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 from model import NetD,NetG
 import conf
@@ -64,7 +71,7 @@ def train():
 
             if i%4 ==0:
                 rate = i*1.0/len(dataloader)*100
-                print "epoch={}, i={}, N={}, rate={}%, errD={}, errG={}".format(epoch, i, len(dataloader), rate, errD, errG)
+                logger.info("epoch={}, i={}, N={}, rate={}%, errD={}, errG={}".format(epoch, i, len(dataloader), rate, errD, errG))
         #end-for
         save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.checkpoints,epoch), normalize=True)
         torch.save(netG.state_dict(), '%s/netG_%03d.pth' % (conf.checkpoints,epoch))
