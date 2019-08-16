@@ -58,9 +58,9 @@ def train():
             errG.backward()
             optimizerG.step()
 
-            if i%2 ==0:
-                rate = i*1.0/len(dataloader)
-                print "epoch={}, rate={}, errD={}, errG={}".format(epoch, rate, errD, errG)
+            if i%4 ==0:
+                rate = i*1.0/len(dataloader)*100
+                print "epoch={}, i={}, N={}, rate={}%, errD={}, errG={}".format(epoch, i, len(dataloader), rate, errD, errG)
         #end-for
         torch.utils.save_image(fake.data, '%s/fake_samples_epoch_%03d.png' % (conf.outf,epoch), normalize=True)
         torch.save(negG.state_dict(), '%s/netG_%03d.pth' % (conf.outf,epoch))
