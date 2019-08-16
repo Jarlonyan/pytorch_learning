@@ -2,7 +2,7 @@
 
 import torch.nn as nn
 
-
+#生成网络
 class NetG(nn.Module):
     def __init__(self, ngf, nz):
         super(NetG, self).__init__()
@@ -63,8 +63,21 @@ class NetD(nn.Module):
             nn.BatchNorm2d(ndf*4),
             nn.LeakyReLU(0.2, inplace=True)
         )
-        self.layer4 = nn.S
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(ndf*4, ndf*8, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf*8),
+            nn.LeakyReLU(0.2, inplace=True)
+        )
+        self.layer5 = nn.sequential(
+            nn.Conv2d(ndf*8, 1, 4, 1, 0, bias=False),
+            nn.Sigmoid()
+        )
 
-
-
+        def forward(self,x):
+            x = self.layer1(x)
+            x = self.layer2(x)
+            x = self.layer3(x)
+            x = self.layer4(x)
+            x = self.layer5(x)
+            return x
 
