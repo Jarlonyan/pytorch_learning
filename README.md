@@ -50,6 +50,17 @@
 # 6. 图片风格迁移
 
 
+
+-----------
+# 7.GAN网络
+
+数据集下载链接：https://pan.baidu.com/share/init?surl=eSifHcA
+提取码:g5qa
+该数据是[何之源](https://www.zhihu.com/people/he-zhi-yuan-16)爬取的数据
+其中data/是存放训练数据的，imgs/存放的是最终的训练结果，model.py是DCGAN的结构
+参考链接：https://blog.csdn.net/sunqiande88/article/details/80219842
+
+
 # 7、参考
 
 + [【参考1】MorvanZhou/PyTorch-Tutorial](https://github.com/MorvanZhou/PyTorch-Tutorial)
