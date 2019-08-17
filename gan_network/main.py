@@ -79,12 +79,18 @@ def train():
         torch.save(netD.state_dict(), '%s/netD_%03d.pth' % (conf.checkpoints,epoch))
 
 def test():
-    netG = torch.load('checkpoints/netG_013.pth')
-    for i in range(5):
+    #netG = torch.load('checkpoints/netG_013.pth')
+    netG = NetG(conf.batch_size, conf.nz)
+    netG.load_state_dict(torch.load('checkpoints/netG_013.pth'))
+    #netG.eval()
+
+    for i in range(1):
         noise = torch.randn(conf.batch_size, conf.nz, 1, 1)
-        import pdb; pdb.set_trace()
+        #3import pdb; pdb.set_trace()
         fake_img = netG(noise) #生成假图
-        utils.img_show(fake_img)
+        #utils.img_show(fake_img)
+
+        save_image(fake_img.data, './checkpoints/hehe.png')
 
 def main():
     #train()
