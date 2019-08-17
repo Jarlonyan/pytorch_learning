@@ -17,6 +17,7 @@ logger.addHandler(handler)
 
 from model import NetD,NetG
 import conf
+import utils
 
 transforms = torchvision.transforms.Compose([
     torchvision.transforms.Resize(conf.image_size),
@@ -78,19 +79,12 @@ def train():
         torch.save(netD.state_dict(), '%s/netD_%03d.pth' % (conf.checkpoints,epoch))
 
 def test():
-    dataset = torchvision.datasets.ImageFolder(conf.data_path, transform=transforms)   
-    dataloader = torch.utils.data.DataLoader(
-        dataset = dataset,
-        batch_size = 1,
-        shuffle = True,
-        drop_last = True
-    )
-    netD = torch.load('checkpoints/netD_013.pth')
-    dataiter = iter(dataloader)
-    for i in range(12):
-        img = next(dataiter)
-        z = netD(img)
-        print z
+    netG = torch.load('checkpoints/netG_013.pth')
+    for i in range(5):
+        noise = torch.randn(conf.batch_size, conf.nz, 1, 1)
+        import pdb; pdb.set_trace()
+        fake_img = netG(noise) #生成假图
+        utils.img_show(fake_img)
 
 def main():
     #train()
