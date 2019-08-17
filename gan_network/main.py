@@ -81,17 +81,20 @@ def test():
     dataset = torchvision.datasets.ImageFolder(conf.data_path, transform=transforms)   
     dataloader = torch.utils.data.DataLoader(
         dataset = dataset,
-        batch_size = conf.batch_size,
+        batch_size = 1,
         shuffle = True,
         drop_last = True
     )
-    netG = NetG(conf.ngf, conf.nz)
-    netD = NetD(conf.ndf)
-    
+    netD = torch.load('checkpoints/netD_013.pth')
+    dataiter = iter(dataloader)
+    for i in range(12):
+        img = next(dataiter)
+        z = netD(img)
+        print z
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
