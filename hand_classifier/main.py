@@ -52,7 +52,7 @@ def train():
             loss.backward()
             optimizer.step()
 
-            if True:   #i % 1 == 0:
+            if  i % 2 == 0:
                 print "Epoch={}, i={}, current loss={}".format(epoch, i, loss.data)
                 iteration_number += 1
                 counter.append(iteration_number)
@@ -61,11 +61,11 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 100))
-                plt.ylim((0, 40))
+                plt.ylim((0, 30))
                 plt.pause(0.03)
+                torch.save(net, 'hand_classifier_model_%01_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
     #end-for
     plt.ioff()
-    torch.save(net, 'hand_classifier_model.pkl')  # 保存整个神经网络的结构和模型参数 
     plt.show()
     
 
