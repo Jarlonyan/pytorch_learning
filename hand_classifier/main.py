@@ -63,7 +63,7 @@ def train():
                 plt.xlim((0, 100))
                 plt.ylim((0, 30))
                 plt.pause(0.03)
-                torch.save(net, 'hand_classifier_model_%01_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
+                torch.save(net, 'hand_classifier_model_%01d_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
     #end-for
     plt.ioff()
     plt.show()
