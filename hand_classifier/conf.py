@@ -3,7 +3,7 @@
 txt_train_data = 'images/train.txt'
 txt_test_data = 'images/test.txt'
 
-batch_size = 320
+batch_size = 64
 epochs = 5
 
 root = 'images/'

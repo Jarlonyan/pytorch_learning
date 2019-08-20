@@ -61,7 +61,7 @@ def train():
                 plt.plot(counter, loss_history)
                 plt.draw()
                 plt.xlim((0, 100))
-                plt.ylim((0, 4))
+                plt.ylim((0, 40))
                 plt.pause(0.03)
     #end-for
     plt.ioff()
