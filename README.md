@@ -1,6 +1,6 @@
 
 
-# 1. siamese_network孪生网络
+# 1. gan_network 孪生网络 
 
 【参考】https://www.cnblogs.com/king-lps/p/8342452.html
 
@@ -22,23 +22,26 @@
     数据链接： https://files.cnblogs.com/files/king-lps/att_faces.zip
     首先解压后发现文件夹下共40个文件夹，每个文件夹里有10张pgm图片。这里生成一个包含图片路径的train.txt文件共后续调用：
 
--------------
-# 2. 猫狗识别
 
-+ 代码来源：《深度学习框架：pytorch入门与实践》--作者：陈云
+-----------------
+# 2. triplet_network 网络
+
++ 代码来源：https://github.com/andreasveit/triplet-network-pytorch
 
 
 
 --------------
-# 3. 简单手势分类器
+# 3. hand_classifier 简单手势分类器
 
 + 代码来源：https://www.jianshu.com/p/c4723a4409cf
 
 
------------------
-# 4. triplet-loss网络
 
-+ 代码来源：https://github.com/andreasveit/triplet-network-pytorch
+-------------
+# 4. dog_cat_classifier 猫狗识别
+
++ 代码来源：《深度学习框架：pytorch入门与实践》--作者：陈云
+
 
 
 ----------------
@@ -47,12 +50,12 @@
 
 
 -----------------
-# 6. 图片风格迁移
+# 6. style_transfer_image 图片风格迁移
 
 
 
 -----------
-# 7.GAN网络
+# 7.GAN网络 gan_network
 
 数据集下载链接：https://pan.baidu.com/share/init?surl=eSifHcA
 提取码:g5qa
@@ -61,7 +64,11 @@
 参考链接：https://blog.csdn.net/sunqiande88/article/details/80219842
 
 
-# 7、参考
+
+------
+# 8. 强化学习reinforcement_learning
+
+# 9. 参考
 
 + [【参考1】MorvanZhou/PyTorch-Tutorial](https://github.com/MorvanZhou/PyTorch-Tutorial)
 
@@ -75,7 +82,7 @@
 
 + [【参考6】Implementing word2vec in PyTorch (skip-gram model)](https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb)
 
-# 8、数据集
+# 10. 数据集
 
 + cifar-10数据集
     + cifar-10介绍
@@ -86,7 +93,7 @@
 
     + [cifar-10下载地址](http://www.cs.toronto.edu/~kriz/cifar.html)
 
-# 9、pytorch环境搭建
+# 11. pytorch环境搭建
 +  mac下安装pytorch 
     + 安装pytorch
        ```shell
