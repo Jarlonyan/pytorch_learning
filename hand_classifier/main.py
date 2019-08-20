@@ -1,6 +1,4 @@
 # coding=utf-8
-# 参考：https://www.cnblogs.com/king-lps/p/8342452.html
-# 数据下载链接：https://files.cnblogs.com/files/king-lps/att_faces.zip
 
 import os
 import random
@@ -31,18 +29,18 @@ def train():
                            should_invert=False)
     train_dataloader = DataLoader(dataset=train_data, \
                                   shuffle=True,       \
-                                  batch_size=conf.train_batch_size)
+                                  batch_size=conf.batch_size)
     
-    net = model.BaseNet()
+    net = model.BaseNet(num=6)
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.006)
+    optimizer = optim.Adam(net.parameters(), lr=0.01)
 
     counter = []
     loss_history = []
     iteration_number = 0
 
     plt.ion()
-    for epoch in range(0, conf.train_number_epochs):
+    for epoch in range(0, conf.epochs):
         for i, data in enumerate(train_dataloader, 0):
             img, y = data
             img = Variable(img)
@@ -90,7 +88,7 @@ def test():
 
         #print y_head
         idx = y_head.index(max(y_head))
-        text = "output="+str(idx)+", label="+str(int(label))
+        text = "y_head="+str(idx)+", label="+str(int(label))
         print text #utils.img_show(img, text, color="white")
     #end-for
 
