@@ -56,7 +56,7 @@ def train():
             optimizer.step()
             running_loss += loss.data
             if i%100 == 99:
-                print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss/2000)
+                print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss/100)
                 running_loss = 0
                 torch.save(net.state_dict(), './checkpoints/dnn_model_%02d_%04d.pkl'%(epoch,i))
     #end-for
@@ -66,7 +66,7 @@ def train():
 def test():
     batch_size = 2
     net = model.Net(num=10)
-    net.load_state_dict(torch.load('./checkpoints/model.pkl'))
+    net.load_state_dict(torch.load('./checkpoints/dnn_model_.pkl'))
     test_data = tv.datasets.CIFAR10(root = "./cifar/",
                                    train = False,
                                    download = True,
@@ -81,7 +81,6 @@ def test():
         imgs, labels = next(dataiter)
         y_head = net(imgs)
         y_head = y_head.data.max(1, keepdim=True)[1].view(batch_size)
-        #text = "y_head="+str(y_head[0].tolist())+", pred="+str(idx)+", label="+str(int(labels))
         diff = y_head - labels
         print diff
         #text = "pred="+str(y_head)+", label="+str(labels)
@@ -89,8 +88,8 @@ def test():
     #end-for 
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 
 if __name__ == '__main__':
