@@ -8,6 +8,7 @@ import torch.nn.functional as F
 import torchvision as tv
 from torchvision.transforms import ToPILImage
 from torch.autograd import Variable
+import torchvision.models as models
 
 class Net(nn.Module):
     def __init__(self, num=10):
@@ -35,4 +36,23 @@ class Net(nn.Module):
         x = x.view(-1, dim)
         return x
 
+class BaseNet(nn.Module):
+    def __init__(self, num=10):
+        super(BaseNet, self).__init__()
+        self.emb_model = models.resnet152(pretrained=True) #resnet18, resnet152
+        for param in self.emb_model.parameters():
+            param.requires_grad = False
+        fc_features = self.emb_model.fc.in_features
+        self.emb_model.fc = nn.Linear(fc_features, 1024)
+
+        self.fc1 = nn.Linear(1024, 128)
+        self.fc2 = nn.Linear(128, num)
+        self.params = self.emb_model.fc.parameters()
+
+    def forward(self, x):
+        x = self.emb_model(x)
+        x = F.relu(x)
+        x = self.fc1(x)
+        x = F.relu(x)
+        return self.fc2(x)
 

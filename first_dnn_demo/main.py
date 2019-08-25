@@ -12,29 +12,39 @@ import matplotlib.pyplot as plt
 
 import model
 import utils
+import conf
 
 my_transform = tv.transforms.Compose([tv.transforms.ToTensor(),  \
                                    tv.transforms.Normalize((0.5,0.5,0.5),(0.56,0.5,0.5))])
 
+my_transform2 = tv.transforms.Compose([tv.transforms.Resize((224, 224)),
+                                       tv.transforms.ToTensor(),  \
+                                       tv.transforms.Normalize((0.5,0.5,0.5),(0.56,0.5,0.5))])
+
 def train():
     train_set = tv.datasets.CIFAR10(root = "./cifar/",  # MNIST   CIFAR10
                                     download = True,
-                                    transform = my_transform)
+                                    transform = my_transform2)
 
     train_loader = torch.utils.data.DataLoader(train_set, 
-                                               batch_size = 4,
+                                               batch_size = conf.batch_size,
                                                shuffle = True,
                                                num_workers = 2)
 
-    #constract the net
-    net = model.Net(num=10)
-    params = list(net.parameters())
-    print net
+    #model1
+    #net = model.Net(num=10)
+    #params = list(net.parameters())
+    #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+
+    #model2
+    net = model.BaseNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=0.01)
+
+    #print net
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) 
-   
-    for epoch in range(0,2):
+
+    for epoch in range(conf.epochs):
         running_loss = 0
         for i,data in enumerate(train_loader, 0):
             inputs, labels = data 
@@ -45,11 +55,11 @@ def train():
             loss.backward()
             optimizer.step()
             running_loss += loss.data
-            if i%2000 == 1999:
+            if i%100 == 99:
                 print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss/2000)
                 running_loss = 0
+                torch.save(net.state_dict(), './checkpoints/dnn_model_%02d_%04d.pkl'%(epoch,i))
     #end-for
-    torch.save(net.state_dict(), './checkpoints/model.pkl')
     print "end of training"
 
 
@@ -73,8 +83,9 @@ def test():
         y_head = y_head.data.max(1, keepdim=True)[1].view(batch_size)
         #text = "y_head="+str(y_head[0].tolist())+", pred="+str(idx)+", label="+str(int(labels))
         diff = y_head - labels
-        text = "pred="+str(y_head)+", label="+str(labels)
-        print text #utils.img_show(img, text, color="white")
+        print diff
+        #text = "pred="+str(y_head)+", label="+str(labels)
+        #print text #utils.img_show(img, text, color="white")
     #end-for 
 
 def main():
