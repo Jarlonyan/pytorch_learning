@@ -36,9 +36,9 @@ class Net(nn.Module):
         x = x.view(-1, dim)
         return x
 
-class BaseNet(nn.Module):
+class FinetuneNet(nn.Module):
     def __init__(self, num=10):
-        super(BaseNet, self).__init__()
+        super(FinetuneNet, self).__init__()
         self.emb_model = models.resnet152(pretrained=True) #resnet18, resnet152
         for param in self.emb_model.parameters():
             param.requires_grad = False

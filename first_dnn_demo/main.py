@@ -37,7 +37,7 @@ def train():
     #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     #model2
-    net = model.BaseNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+    net = model.FinetuneeNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=0.01)
 
     #print net
@@ -68,7 +68,7 @@ def test():
     #net = model.Net(num=10)
 
     #model2
-    net = model.BaseNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+    net = model.FinetuneNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
     net.load_state_dict(torch.load('./checkpoints/dnn_model_00_0014.pkl'))
  
     batch_size = 20
