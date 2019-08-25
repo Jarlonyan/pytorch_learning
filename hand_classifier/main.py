@@ -33,7 +33,7 @@ def train():
     
     net = model.BaseNet(num=6)
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.01)
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=0.01)
 
     counter = []
     loss_history = []
@@ -63,14 +63,15 @@ def train():
                 plt.xlim((0, 100))
                 plt.ylim((0, 30))
                 plt.pause(0.03)
-                torch.save(net, 'hand_classifier_model_%01d_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
+                torch.save(net.state_dict(), './checkpoints/hand_classifier_model_%01d_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
     #end-for
     plt.ioff()
     plt.show()
     
 
 def test():
-    net = torch.load('hand_classifier_model.pkl')
+    net = model.BaseNet(num=6)
+    net.load_state_dict(torch.load('./checkpoints/hand_classifier_model_0_030.pkl'))
     test_data = MyDataset(txt=conf.txt_test_data, 
                            transform=transforms.Compose([transforms.Resize((224, 224)),  \
                                                         transforms.ToTensor(),            \
@@ -81,20 +82,21 @@ def test():
                                   batch_size=1)
     
     dataiter = iter(test_dataloader)
-    for i in range(16):
+    for i in range(10):
         img, label = next(dataiter)
         y_head = net(img)
         y_head = y_head[0].tolist()
 
         #print y_head
         idx = y_head.index(max(y_head))
-        text = "y_head="+str(idx)+", label="+str(int(label))
+        #text = "y_head="+str(idx)+", label="+str(int(label))
+        text = "y_head="+str(y_head)+", pred="+str(idx)+", label="+str(int(label))
         print text #utils.img_show(img, text, color="white")
     #end-for
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
