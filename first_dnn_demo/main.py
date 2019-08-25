@@ -55,7 +55,7 @@ def train():
             loss.backward()
             optimizer.step()
             running_loss += loss.data
-            if i%100 == 99:
+            if i%2 == 0:
                 print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss/100)
                 running_loss = 0
                 torch.save(net.state_dict(), './checkpoints/dnn_model_%02d_%04d.pkl'%(epoch,i))
@@ -64,13 +64,18 @@ def train():
 
 
 def test():
-    batch_size = 2
-    net = model.Net(num=10)
-    net.load_state_dict(torch.load('./checkpoints/dnn_model_.pkl'))
+    #model1
+    #net = model.Net(num=10)
+
+    #model2
+    net = model.BaseNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+    net.load_state_dict(torch.load('./checkpoints/dnn_model_00_0014.pkl'))
+ 
+    batch_size = 20
     test_data = tv.datasets.CIFAR10(root = "./cifar/",
                                    train = False,
                                    download = True,
-                                   transform = my_transform)
+                                   transform = my_transform2)
 
     test_dataloader = torch.utils.data.DataLoader(dataset=test_data,  \
                                                   shuffle=True,       \
@@ -82,7 +87,7 @@ def test():
         y_head = net(imgs)
         y_head = y_head.data.max(1, keepdim=True)[1].view(batch_size)
         diff = y_head - labels
-        print diff
+        print y_head, labels, diff
         #text = "pred="+str(y_head)+", label="+str(labels)
         #print text #utils.img_show(img, text, color="white")
     #end-for 
