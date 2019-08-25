@@ -85,11 +85,7 @@ def test():
     for i in range(10):
         img, label = next(dataiter)
         y_head = net(img)
-        y_head = y_head[0].tolist()
-
-        #print y_head
-        idx = y_head.index(max(y_head))
-        #text = "y_head="+str(idx)+", label="+str(int(label))
+        idx = y_head.data.max(1, keepdim=True)[1]
         text = "y_head="+str(y_head)+", pred="+str(idx)+", label="+str(int(label))
         print text #utils.img_show(img, text, color="white")
     #end-for
