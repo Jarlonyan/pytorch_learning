@@ -17,8 +17,7 @@ my_transform = tv.transforms.Compose([tv.transforms.ToTensor(),  \
                                    tv.transforms.Normalize((0.5,0.5,0.5),(0.56,0.5,0.5))])
 
 def train():
-    train_set = tv.datasets.CIFAR10(root = "./cifar/",
-                                    train = True,
+    train_set = tv.datasets.CIFAR10(root = "./cifar/",  # MNIST   CIFAR10
                                     download = True,
                                     transform = my_transform)
 
@@ -70,15 +69,15 @@ def test():
     for i in range(10):
         imgs, labels = next(dataiter)
         y_head = net(imgs)
-        idx = y_head.data.max(1, keepdim=True)[1]
+        idx = int(y_head.data.max(1, keepdim=True)[1])
         #text = "y_head="+str(y_head[0].tolist())+", pred="+str(idx)+", label="+str(int(labels))
         text = "pred="+str(idx)+", label="+str(int(labels))
         print text #utils.img_show(img, text, color="white")
     #end-for 
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 
 if __name__ == '__main__':
