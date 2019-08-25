@@ -54,6 +54,7 @@ def train():
 
 
 def test():
+    batch_size = 2
     net = model.Net(num=10)
     net.load_state_dict(torch.load('./checkpoints/model.pkl'))
     test_data = tv.datasets.CIFAR10(root = "./cifar/",
@@ -63,15 +64,16 @@ def test():
 
     test_dataloader = torch.utils.data.DataLoader(dataset=test_data,  \
                                                   shuffle=True,       \
-                                                  batch_size=1)
+                                                  batch_size=batch_size)
 
     dataiter = iter(test_dataloader)
     for i in range(10):
         imgs, labels = next(dataiter)
         y_head = net(imgs)
-        idx = int(y_head.data.max(1, keepdim=True)[1])
+        y_head = y_head.data.max(1, keepdim=True)[1].view(batch_size)
         #text = "y_head="+str(y_head[0].tolist())+", pred="+str(idx)+", label="+str(int(labels))
-        text = "pred="+str(idx)+", label="+str(int(labels))
+        diff = y_head - labels
+        text = "pred="+str(y_head)+", label="+str(labels)
         print text #utils.img_show(img, text, color="white")
     #end-for 
 
