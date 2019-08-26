@@ -24,7 +24,7 @@ my_transform2 = tv.transforms.Compose([tv.transforms.Resize((224, 224)),
 def train():
     train_set = tv.datasets.CIFAR10(root = "./cifar/",  # MNIST   CIFAR10
                                     download = True,
-                                    transform = my_transform2)
+                                    transform = my_transform)
 
     train_loader = torch.utils.data.DataLoader(train_set, 
                                                batch_size = conf.batch_size,
@@ -32,13 +32,13 @@ def train():
                                                num_workers = 2)
 
     #model1
-    #net = model.Net(num=10)
-    #params = list(net.parameters())
-    #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    net = model.Net(num=10)
+    params = list(net.parameters())
+    optimizer = optim.Adam(net.parameters(), lr=0.001)
 
     #model2
-    net = model.FinetuneeNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=0.01)
+    #net = model.FinetuneeNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+    #optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=0.01)
 
     #print net
 
@@ -55,7 +55,7 @@ def train():
             loss.backward()
             optimizer.step()
             running_loss += loss.data
-            if i%2 == 0:
+            if i%1000 == 999:
                 print "epoch=%d, batch=%d, loss=%.4f"%(epoch+1, i, running_loss/100)
                 running_loss = 0
                 torch.save(net.state_dict(), './checkpoints/dnn_model_%02d_%04d.pkl'%(epoch,i))
@@ -65,17 +65,17 @@ def train():
 
 def test():
     #model1
-    #net = model.Net(num=10)
+    net = model.Net(num=10)
 
     #model2
-    net = model.FinetuneNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
-    net.load_state_dict(torch.load('./checkpoints/dnn_model_00_0014.pkl'))
- 
+    #net = model.FinetuneNet(num=10) #如果用resnet152，就得将图像size设置成为224x224，用my_transform2
+
+    net.load_state_dict(torch.load('./checkpoints/dnn_model_00_0420.pkl'))
     batch_size = 20
     test_data = tv.datasets.CIFAR10(root = "./cifar/",
                                    train = False,
                                    download = True,
-                                   transform = my_transform2)
+                                   transform = my_transform)
 
     test_dataloader = torch.utils.data.DataLoader(dataset=test_data,  \
                                                   shuffle=True,       \
@@ -87,7 +87,10 @@ def test():
         y_head = net(imgs)
         y_head = y_head.data.max(1, keepdim=True)[1].view(batch_size)
         diff = y_head - labels
-        print y_head, labels, diff
+        #print y_head, labels, diff
+        error_cnt = int(torch.nonzero(diff).shape[0])
+        right_rate = (batch_size - error_cnt)*100.0/batch_size
+        print right_rate,"%"
         #text = "pred="+str(y_head)+", label="+str(labels)
         #print text #utils.img_show(img, text, color="white")
     #end-for 
