@@ -14,12 +14,13 @@ import torchvision
 import matplotlib.pyplot as plt
 import numpy as np
 from decimal import Decimal
-import logging
+
 
 import conf
 import utils
 from dataset import MyDataset
 import model
+import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
@@ -84,7 +85,8 @@ def train():
 
 def test():
     net = model.FinetuneNet(num_classes=6)
-    net.load_state_dict(torch.load('./checkpoints/hand_classifier_model_0_009.pkl'))
+    net.load_state_dict(torch.load('./checkpoints/hand_classifier_model_8_000.pkl'))
+    #net.load_state_dict(torch.load('./checkpoints/first.pkl'))
     test_data = MyDataset(txt=conf.txt_test_data, 
                           transform=transforms.Compose([transforms.Resize((224, 224)),  \
                                                         transforms.ToTensor(),            \
@@ -95,7 +97,7 @@ def test():
 
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
-                                  batch_size=50)
+                                  batch_size=3)
     
     dataiter = iter(test_dataloader)
     for i in range(10):
@@ -109,12 +111,15 @@ def test():
         equals = (pred.indices == labels).float()
         accuracy = torch.mean(equals)
         print float(accuracy)*100,'% ', pred, labels
+
+        text = "preds={}, labels={}".format(pred.indices.tolist(), labels.tolist())
+        utils.img_show(torchvision.utils.make_grid(imgs), ' %s'%text, color="white")
     #end-for
 
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
