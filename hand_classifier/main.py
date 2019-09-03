@@ -14,12 +14,19 @@ import torchvision
 import matplotlib.pyplot as plt
 import numpy as np
 from decimal import Decimal
-
+import logging
 
 import conf
 import utils
 from dataset import MyDataset
 import model
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+handler = logging.FileHandler('output.log')
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 def train():
     train_data = MyDataset(txt=conf.txt_train_data, 
@@ -56,12 +63,11 @@ def train():
             loss.backward()
             optimizer.step()
 
-            if  i % 2 == 0:
-                print "Epoch={}, i={}, current loss={}".format(epoch, i, loss.data)
+            if  i % 9 == 0:
+                logger.info("epoch={}, i={}, loss={}".format(epoch, i, loss.data))
                 iteration_number += 1
                 counter.append(iteration_number)
                 loss_history.append(loss.data)
-                print loss.data
                 torch.save(net.state_dict(), './checkpoints/hand_classifier_model_%01d_%03d.pkl'%(epoch, i))  # 保存整个神经网络的结构和模型参数
 
                 '''
@@ -78,7 +84,7 @@ def train():
 
 def test():
     net = model.FinetuneNet(num_classes=6)
-    net.load_state_dict(torch.load('./checkpoints/hand_classifier_model_0_008.pkl'))
+    net.load_state_dict(torch.load('./checkpoints/hand_classifier_model_0_009.pkl'))
     test_data = MyDataset(txt=conf.txt_test_data, 
                           transform=transforms.Compose([transforms.Resize((224, 224)),  \
                                                         transforms.ToTensor(),            \
@@ -89,10 +95,10 @@ def test():
 
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
-                                  batch_size=conf.batch_size)
+                                  batch_size=50)
     
     dataiter = iter(test_dataloader)
-    for i in range(6):
+    for i in range(10):
         imgs, labels = next(dataiter)
         log_prob = net(imgs)
         prob = torch.exp(log_prob)
@@ -102,13 +108,13 @@ def test():
         # 计算accuracy
         equals = (pred.indices == labels).float()
         accuracy = torch.mean(equals)
-        print float(accuracy)*100,'%' #prob, labels
+        print float(accuracy)*100,'% ', pred, labels
     #end-for
 
 
 def main():
-    #train()
-    test()
+    train()
+    #test()
 
 if __name__ == "__main__":
     main()
