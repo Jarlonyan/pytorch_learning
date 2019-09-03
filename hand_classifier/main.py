@@ -32,7 +32,7 @@ logger.addHandler(handler)
 def train():
     train_data = MyDataset(txt=conf.txt_train_data, 
                            transform=transforms.Compose([transforms.Resize((224, 224)), \
-                                                         transforms.ToTensor(),  \
+                                                         transforms.ToTensor(),         \
                                                          transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                            ]),
                            should_invert=False
@@ -89,14 +89,14 @@ def test():
     #net.load_state_dict(torch.load('./checkpoints/first.pkl'))
     test_data = MyDataset(txt=conf.txt_test_data, 
                           transform=transforms.Compose([transforms.Resize((224, 224)),  \
-                                                        transforms.ToTensor(),            \
+                                                        transforms.ToTensor(),          \
                                                         transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                           ]),
                           should_invert=False
     )
 
     test_dataloader = DataLoader(dataset=test_data, \
-                                  shuffle=True,       \
+                                  shuffle=True,     \
                                   batch_size=3)
     
     dataiter = iter(test_dataloader)
