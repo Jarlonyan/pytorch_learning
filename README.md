@@ -1,6 +1,6 @@
 
 
-# 1. gan_network 孪生网络 
+# 1. `siamese_network`孪生网络 
 
 【参考】https://www.cnblogs.com/king-lps/p/8342452.html
 
@@ -24,38 +24,38 @@
 
 
 -----------------
-# 2. triplet_network 网络
+# 2. `triplet_network` 网络
 
 + 代码来源：https://github.com/andreasveit/triplet-network-pytorch
 
 
 
 --------------
-# 3. hand_classifier 简单手势分类器
+# 3. `hand_classifier` 简单手势分类器
 
 + 代码来源：https://www.jianshu.com/p/c4723a4409cf
 
 
 
 -------------
-# 4. dog_cat_classifier 猫狗识别
+# 4. `dog_cat_classifier` 猫狗识别
 
 + 代码来源：《深度学习框架：pytorch入门与实践》--作者：陈云
 
 
 
 ----------------
-# 5. word2vec
+# 5. `word2vec`
 
 
 
 -----------------
-# 6. style_transfer_image 图片风格迁移
+# 6. `style_transfer_image` 图片风格迁移
 
 
 
 -----------
-# 7.GAN网络 gan_network
+# 7.GAN网络 `gan_network`
 
 数据集下载链接：https://pan.baidu.com/share/init?surl=eSifHcA
 提取码:g5qa
@@ -66,7 +66,7 @@
 
 
 ------
-# 8. 强化学习reinforcement_learning
+# 8. 强化学习`reinforcement_learning`
 
 # 9. 参考
 
