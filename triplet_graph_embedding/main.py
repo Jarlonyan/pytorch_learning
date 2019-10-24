@@ -58,7 +58,10 @@ def train():
     #end-for
 
 def test():
-    net = torch.load('triplet_model.pkl')
+    basenet = model.BaseNet()
+    net = model.TripletNetwork(basenet)
+    net.load_state_dict(torch.load('./checkpoints/model_4_030.pkl'))
+    
     test_data = MyDataset(txt=conf.data_path)
     test_dataloader = DataLoader(dataset=test_data, \
                                   shuffle=True,       \
@@ -74,8 +77,8 @@ def test():
         print dist_p
 
 def main():
-    train()
-    #test()
+    #train()
+    test()
 
 if __name__ == "__main__":
     main()
