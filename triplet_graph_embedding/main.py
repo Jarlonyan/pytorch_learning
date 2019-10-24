@@ -21,9 +21,7 @@ import model
 
 def train():
     train_data = MyDataset(txt=conf.data_path) 
-    train_dataloader = DataLoader(dataset=train_data, \
-                                  shuffle=True,       \
-                                  batch_size=conf.train_batch_size)
+    train_dataloader = DataLoader(dataset=train_data, shuffle=True, batch_size=conf.train_batch_size)
     
     basenet = model.BaseNet()
     net = model.TripletNetwork(basenet)
@@ -63,9 +61,7 @@ def test():
     net.load_state_dict(torch.load('./checkpoints/model_4_030.pkl'))
     
     test_data = MyDataset(txt=conf.data_path)
-    test_dataloader = DataLoader(dataset=test_data, \
-                                  shuffle=True,       \
-                                  batch_size=1)
+    test_dataloader = DataLoader(dataset=test_data, shuffle=True, batch_size=1)
     
     dataiter = iter(test_dataloader)
     for i in range(1):
