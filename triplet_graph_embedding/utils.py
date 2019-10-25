@@ -18,7 +18,7 @@ def rand_select_neg(G, target):
     return nodes_list[idx]
 
 def generate_ins():
-    G = nx.read_gml("data/dolphins.gml")
+    G = nx.read_gml("data/dolphins.gml", label='id')
     f = open(conf.data_path, 'w')
     word2idx = dict()
     idx2word = dict()

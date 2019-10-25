@@ -12,6 +12,7 @@ import numpy as np
 from decimal import Decimal
 import pickle
 import networkx as nx
+import matplotlib.pyplot as plt
 
 import conf
 import utils
@@ -80,7 +81,7 @@ def get_embedding():
     net.load_state_dict(torch.load('./checkpoints/model_29_030.pkl'))
     #net.load_state_dict(torch.load('./checkpoints/model_0_000.pkl'))
 
-    G = nx.read_gml("data/dolphins.gml")
+    G = nx.read_gml("data/dolphins.gml", label='id')
     with open('data/word2idx.pickle', 'rb') as f:
         word2idx = pickle.load(f)
     for i in G.nodes():
@@ -100,11 +101,17 @@ def get_embedding():
             n_ins = torch.LongTensor([n_idx])
 
             dist_1, dist_2, embedded_x1, embedded_x2, embedded_x3 = net(ins, p_ins, n_ins)
-            print dist_1.detach().numpy().tolist()[0], dist_2.detach().numpy().tolist()[0]
-        
+            dist_1 = float(dist_1.detach().numpy())
+            dist_2 = float(dist_2.detach().numpy())
+            if dist_1 > dist_2:
+                print dist_1, dist_2, i,j,n, list(G.neighbors(i))
+    #end-for
+    nx.draw(G, with_labels=True)
+    plt.show()
+ 
 
 def main():
-    #train()
+    train()
     #test()
     get_embedding()
 
