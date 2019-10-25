@@ -18,7 +18,7 @@ class MyDataset(Dataset):    # 继承Dataset类以定制
         ins_p = torch.LongTensor([int(ins_list[1])])
         ins_n = torch.LongTensor([int(ins_list[2])])
         
-        return ins_a, ins_p, ins_p
+        return ins_a, ins_p, ins_n
 
     def __len__(self):       # 数据总长
         fh = open(self.txt, 'r')

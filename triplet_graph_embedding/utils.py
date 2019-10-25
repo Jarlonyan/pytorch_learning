@@ -3,6 +3,7 @@ import os
 import networkx as nx
 import numpy as np
 import random
+import pickle
 
 import conf
 
@@ -20,9 +21,11 @@ def generate_ins():
     G = nx.read_gml("data/dolphins.gml")
     f = open(conf.data_path, 'w')
     word2idx = dict()
+    idx2word = dict()
     idx = 0
     for i in G.nodes:
         word2idx[i] = idx
+        idx2word[idx] = i
         idx += 1
 
     for i in G.nodes:
@@ -40,6 +43,12 @@ def generate_ins():
         #end-for
     #end-for
     f.close()
+
+    with open('data/idx2word.pickle', 'wb') as f:
+        pickle.dump(idx2word, f)
+    
+    with open('data/word2idx.pickle', 'wb') as f:
+        pickle.dump(word2idx, f)
 
 def generate_word_dict():
     G = nx.read_gml("data/dolphins.gml")

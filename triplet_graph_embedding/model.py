@@ -18,8 +18,8 @@ class BaseNet(nn.Module):
 
     def forward(self, x):
         x = self.emb(x)
-        x = F.relu(x)
-        x = self.nn_net(x)
+        #x = F.relu(x)
+        #x = self.nn_net(x)
         return x
 
 class TripletNetwork(nn.Module):
