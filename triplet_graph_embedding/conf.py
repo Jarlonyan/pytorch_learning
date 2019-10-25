@@ -3,7 +3,7 @@
 data_path = 'data/train.txt'
 
 train_batch_size = 10
-train_number_epochs = 15
+train_number_epochs = 30
 
 margin = 0.06
 

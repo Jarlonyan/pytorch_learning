@@ -1,5 +1,4 @@
 # coding=utf-8
-#https://github.com/andreasveit/triplet-network-pytorch/blob/master/tripletnet.py
 
 import os
 import random
@@ -78,8 +77,8 @@ def test():
 def get_embedding():
     basenet = model.BaseNet()
     net = model.TripletNetwork(basenet)
-    #net.load_state_dict(torch.load('./checkpoints/model_14_030.pkl'))
-    net.load_state_dict(torch.load('./checkpoints/model_0_000.pkl'))
+    net.load_state_dict(torch.load('./checkpoints/model_29_030.pkl'))
+    #net.load_state_dict(torch.load('./checkpoints/model_0_000.pkl'))
 
     G = nx.read_gml("data/dolphins.gml")
     with open('data/word2idx.pickle', 'rb') as f:
@@ -87,6 +86,11 @@ def get_embedding():
     for i in G.nodes():
         idx = word2idx[i]
         ins = torch.LongTensor([idx])
+
+        #dist_1, dist_2, embedded_x1, embedded_x2, embedded_x3 = net(ins, ins, ins)
+        #print i, '\t', list(embedded_x1.detach().numpy().tolist())[0]
+        #continue
+
         for j in G.neighbors(i):
             p_idx = word2idx[j]
             p_ins = torch.LongTensor([p_idx])
@@ -97,7 +101,6 @@ def get_embedding():
 
             dist_1, dist_2, embedded_x1, embedded_x2, embedded_x3 = net(ins, p_ins, n_ins)
             print dist_1.detach().numpy().tolist()[0], dist_2.detach().numpy().tolist()[0]
-        #print i, '\t', list(embedded_x1.detach().numpy().tolist())[0]
         
 
 def main():

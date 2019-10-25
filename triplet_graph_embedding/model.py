@@ -12,14 +12,13 @@ class BaseNet(nn.Module):
         super(BaseNet, self).__init__()
         self.emb = nn.Embedding(80, 32)
         self.nn_net = nn.Sequential(
-            nn.Linear(32, 16),
-            nn.ReLU(),
+            nn.Linear(32, 8),
+            #nn.ReLU(),
         )
 
     def forward(self, x):
         x = self.emb(x)
-        #x = F.relu(x)
-        #x = self.nn_net(x)
+        x = self.nn_net(x)
         return x
 
 class TripletNetwork(nn.Module):
