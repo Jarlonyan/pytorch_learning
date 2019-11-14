@@ -78,19 +78,21 @@ def test():
 def get_embedding():
     basenet = model.BaseNet()
     net = model.TripletNetwork(basenet)
-    net.load_state_dict(torch.load('./checkpoints/model_29_030.pkl'))
-    #net.load_state_dict(torch.load('./checkpoints/model_0_000.pkl'))
+    #net.load_state_dict(torch.load('./checkpoints/model_29_030.pkl'))
+    net.load_state_dict(torch.load('./checkpoints/model_99_000.pkl'))
 
     G = nx.read_gml("data/dolphins.gml", label='id')
     with open('data/word2idx.pickle', 'rb') as f:
         word2idx = pickle.load(f)
+    cnt = 0
+    b_cnt = 0
     for i in G.nodes():
         idx = word2idx[i]
         ins = torch.LongTensor([idx])
 
-        #dist_1, dist_2, embedded_x1, embedded_x2, embedded_x3 = net(ins, ins, ins)
-        #print i, '\t', list(embedded_x1.detach().numpy().tolist())[0]
-        #continue
+        # dist_1, dist_2, embedded_x1, embedded_x2, embedded_x3 = net(ins, ins, ins)
+        # print i, '\t', list(embedded_x1.detach().numpy().tolist())[0]
+        # continue
 
         for j in G.neighbors(i):
             p_idx = word2idx[j]
@@ -105,13 +107,16 @@ def get_embedding():
             dist_2 = float(dist_2.detach().numpy())
             if dist_1 > dist_2:
                 print dist_1, dist_2, i,j,n, list(G.neighbors(i))
+                b_cnt += 1
+            cnt += 1
     #end-for
-    nx.draw(G, with_labels=True)
-    plt.show()
+    print cnt, b_cnt
+    #nx.draw(G, with_labels=True)
+    #plt.show()
  
 
 def main():
-    train()
+    #train()
     #test()
     get_embedding()
 
