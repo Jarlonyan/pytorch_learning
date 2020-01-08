@@ -35,4 +35,9 @@ class DeepFM(torch.nn.Module):
         """
         fm_first_order_emb_arr = [(torch.sum(emb(Xi[:,i,:], 1).t() * Xv[:,i].t() for i,emb in enumerate(self.fm_first_order_embeddings)))]
         fm_first_order = torch.cat(fm_first_order_emb_arr,1)
-        fm_second_order_em_arr = 
+        fm_second_order_em_arr = [(torch.sum(emb(Xi[:,i,:]),1).t() * Xv[:,i]).to() for i,emb in enumerate(self.fm_second_order_embeddings)]
+        fm_sum_second_order_emb = sum(fm_second_order_em_arr)
+        fm_sum_second_order_emb_square = fm_sum_second_order_emb * fm_sum_second_order_emb
+        fm_second_order_emb_square_sum = [item*item for item in fm_second_order_emb_arr]
+        fm_second_order = (fm_sum_second_order_emb_square - fm_second_order_emb_square_sum) * 0.5
+        
