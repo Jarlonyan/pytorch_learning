@@ -3,7 +3,7 @@ import torch
 
 
 class DeepFM(torch.nn.Module):
-    def __init__(self, features_sizes, embedding_size,=4, hidden_dims=[32,32], num_classes=1, dropout=[0.5,0.5], verbose=False):
+    def __init__(self, features_sizes, embedding_size=4, hidden_dims=[32,32], num_classes=1, dropout=[0.5,0.5], verbose=False):
         super().__init__()
         self.field_size = len(feature_sizes)
         self.feature_sizes = feature_sizes
@@ -24,7 +24,7 @@ class DeepFM(torch.nn.Module):
         #init deep part
         all_dims = [self.field_size*self.embedding_size] + self.hidden_dims + [self.num_classes]
         for i in range(1, len(hiden_dims)+1):
-            setattr(self, 'linear_'+str(i), torch.nn.Linear(all_dims[i-1], all_dims[i])
+            setattr(self, 'linear_'+str(i), torch.nn.Linear(all_dims[i-1], all_dims[i]))
             setattr(self, 'batchNorm_'+str(i), torch.nn.BatchNorm1d(all_dims[i]))
             setattr(self, 'dropout_'+str(i), torch.nn.Dropout(dropout[i-1]))
 
@@ -52,7 +52,7 @@ class DeepFM(torch.nn.Module):
         #sum
         total_sum = torch.sum(fm_first_order,1) + torch.sum(fm_second_order,1) + torch.sum(deep_out,1) + self.bias
     
-    def train_model(self, loader_train, loader_val, optimizer, epochs=10, verbose=False, print_every+10):
+    def train_model(self, loader_train, loader_val, optimizer, epochs=10, verbose=False, print_every=10):
         model = self.train().to(device='cpu')
         criterion = F.binary_cross_entropy_with_logits
 
