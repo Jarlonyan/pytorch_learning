@@ -12,9 +12,9 @@ from model import DeepFM
 from dataset import CriteoDataset
 
 def main():
-    num_train = 9000
+    num_train = 900
     train_data = CriteoDataset('./data', train=True)
-    loader_train = DataLoader(train_data, batch_size=100, sampler=sampler.SubsetRandomSapler(range(num_train)))
+    loader_train = DataLoader(train_data, batch_size=100, sampler=sampler.SubsetRandomSampler(range(num_train)))
 
     val_data = CriteoDataset('./data', train=True)
     loader_val = DataLoader(val_data, batch_size=100, sampler=sampler.SubsetRandomSampler(range(num_train, 10000)))
