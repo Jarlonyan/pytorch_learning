@@ -1,6 +1,6 @@
 import os
 import sys
-import click
+#import click
 import random
 import collections
 
@@ -32,12 +32,16 @@ class CategoryDictGenerator:
                     if features[categorial_features[i]] != '':
                         self.dicts[i][features[categorial_features[i]]] += 1
         for i in range(0, self.num_feature):
-            self.dicts[i] = filter(lambda x: x[1] >= cutoff,
-                                   self.dicts[i].items())
+            self.dicts[i] = filter(lambda x: x[1] >= cutoff, self.dicts[i].items())
             self.dicts[i] = sorted(self.dicts[i], key=lambda x: (-x[1], x[0]))
-            vocabs, _ = list(zip(*self.dicts[i]))
-            self.dicts[i] = dict(zip(vocabs, range(1, len(vocabs) + 1)))
-            self.dicts[i]['<unk>'] = 0
+            try:
+                vocabs, _ = list(zip(*self.dicts[i]))
+                self.dicts[i] = dict(zip(vocabs, range(1, len(vocabs) + 1)))
+                self.dicts[i]['<unk>'] = 0
+                print "success: ", self.dicts[i]
+            except Exception:
+                print "Error:", self.dicts[i]
+                
 
     def gen(self, idx, key):
         if key not in self.dicts[idx]:
@@ -145,4 +149,4 @@ def preprocess(datadir, outdir, num_train_sample = 10000, num_test_sample = 1000
                 out.write(','.join([continous_vals, categorial_vals]) + '\n')
 
 if __name__ == "__main__":
-    preprocess('../data/raw', '../data')
+    preprocess('./data/', './data_tmp')

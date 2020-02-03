@@ -17,7 +17,7 @@ class CriteoDataset(torch.utils.data.Dataset):
 
         if self.train:
             data = pd.read_csv(os.path.join(root, 'train.txt'))
-            self.train_data = datra.iloc[:, :-1].values
+            self.train_data = data.iloc[:, :-1].values
             self.target = data.iloc[:, -1].values
         else:
             data = pd.read_csv(os.path.join(root, 'test.txt'))
