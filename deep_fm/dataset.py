@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 import os
 
+continous_features = 13
+
 class CriteoDataset(torch.utils.data.Dataset):
     def __init__(self, root, train=True):
         self.root = root
@@ -26,12 +28,12 @@ class CriteoDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         data_i, target_i = self.train_data[idx, :], self.target[idx]
         Xi_continous = np.zeros_like(data_i[: 13])
-        Xi_gategorial = data_i[13:]
-        Xi = torch.from_numpy(np.concatenate((Xi_coutinous, Xi_categorial)).astype(np.int32)).unsqueeze(-1)
+        Xi_categorial = data_i[13:]
+        Xi = torch.from_numpy(np.concatenate((Xi_continous, Xi_categorial)).astype(np.int32)).unsqueeze(-1)
 
-        Xv_caetorial = np.ones_like(data_i[continous_features:])
-        Xv_coutinous = data_i[:continous_features]
-        Xv = torch.from_numpy(np.concatenate((Xv_coutinous,  Xv_categorial)).astype(np.int32))
+        Xv_categorial = np.ones_like(data_i[continous_features:])
+        Xv_continous = data_i[:continous_features]
+        Xv = torch.from_numpy(np.concatenate((Xv_continous,  Xv_categorial)).astype(np.int32))
         return Xi, Xv, target_i
 
     def __len__(self):
