@@ -11,7 +11,7 @@ class DeepFM(torch.nn.Module):
         self.embedding_size = embedding_size
         self.hidden_dims = hidden_dims
         self.num_classes = num_classes
-        self.dtype = torch
+        self.dtype = torch.long
         self.bias = torch.nn.Parameter(torch.rand(1))
 
         #init fm part
@@ -59,9 +59,9 @@ class DeepFM(torch.nn.Module):
 
         for _ in range(epochs):
             for t,(xi,xv,y) in enumerate(loader_train):
-                xi = xi.to(device='cpu', dtype=self.dtype)
-                xv = xv.to(device='cpu', dtype=torch.float)
-                y = y.to(device='cpu', dtype=torch.float)
+                xi = xi.to(device=torch.device('cpu'), dtype=torch.long)
+                xv = xv.to(device=torch.device('cpu'), dtype=torch.float)
+                y = y.to(device=torch.device('cpu'), dtype=torch.float)
 
                 total = model(xi, xv)
                 loss = criterion(total, y)

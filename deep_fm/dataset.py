@@ -18,7 +18,7 @@ class CriteoDataset(torch.utils.data.Dataset):
             raise RuntimeError("dataset is not found.")
 
         if self.train:
-            data = pd.read_csv(os.path.join(root, 'train.txt'))
+            data = pd.read_csv(os.path.join(root, 'train.txt'), header=None, sep='\t')
             self.train_data = data.iloc[:, :-1].values
             self.target = data.iloc[:, -1].values
         else:
@@ -27,6 +27,7 @@ class CriteoDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         data_i, target_i = self.train_data[idx, :], self.target[idx]
+        import pdb; pdb.set_trace()
         Xi_continous = np.zeros_like(data_i[: 13])
         Xi_categorial = data_i[13:]
         Xi = torch.from_numpy(np.concatenate((Xi_continous, Xi_categorial)).astype(np.int32)).unsqueeze(-1)
