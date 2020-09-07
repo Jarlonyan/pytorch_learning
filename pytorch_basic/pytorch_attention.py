@@ -33,9 +33,9 @@ class Self_Attn_Spatial(nn.Module):
         self.chanel_in = in_dim
         self.out_dim = out_dim
  
-        self.query_conv = nn.Conv2d(in_channels = in_dim , out_channels = out_dim , kernel_size= 1)
-        self.key_conv = nn.Conv2d(in_channels = in_dim , out_channels = out_dim , kernel_size= 1)
-        self.value_conv = nn.Conv2d(in_channels = in_dim , out_channels = in_dim , kernel_size= 1)
+        self.query_conv = nn.Conv2d(in_channels=in_dim, out_channels=out_dim, kernel_size=1)
+        self.key_conv = nn.Conv2d(in_channels=in_dim, out_channels=out_dim, kernel_size=1)
+        self.value_conv = nn.Conv2d(in_channels=in_dim, out_channels=in_dim, kernel_size=1)
         self.gamma = nn.Parameter(torch.zeros(1))
  
         self.softmax  = nn.Softmax(dim=-1)
@@ -43,18 +43,18 @@ class Self_Attn_Spatial(nn.Module):
     def forward(self,x):
         """
             inputs :
-                x : input feature maps( B X C X W X H)
+                x : input feature maps(BxCxWxH)
             returns :
                 out : self attention value + input feature
-                attention: B X N X N (N is Width*Height)
+                attention: BxNxN (N is Width*Height)
         """
-        m_batchsize,C,width ,height = x.size()
+        m_batchsize,C,width,height = x.size()
         
-        #proj_query中的第i行表示第i个像素位置上所有通道的值。size = B X N × C1
-        proj_query  = self.query_conv(x).view(m_batchsize,-1,width*height).permute(0,2,1) 
+        #proj_query中的第i行表示第i个像素位置上所有通道的值。size = BxN×C1
+        proj_query  = self.query_conv(x).view(m_batchsize, -1, width*height).permute(0,2,1)
         
-        #proj_key中的第j行表示第j个像素位置上所有通道的值，size = B X C1 x N
-        proj_key =  self.key_conv(x).view(m_batchsize,-1,width*height) 
+        #proj_key中的第j行表示第j个像素位置上所有通道的值，size = BxC1xN
+        proj_key =  self.key_conv(x).view(m_batchsize, -1, width*height)
         
         #Energy中的第(i,j)是将proj_query中的第i行与proj_key中的第j行点乘得到
         #energy中第(i,j)位置的元素是指输入特征图第j个元素对第i个元素的影响，
@@ -62,24 +62,26 @@ class Self_Attn_Spatial(nn.Module):
         energy =  torch.bmm(proj_query,proj_key) # transpose check
         
         #对行的归一化，对于(i,j)位置即可理解为第j位置对i位置的权重，所有的j对i位置的权重之和为1
-        attention = self.softmax(energy) # B X N X N
+        attention = self.softmax(energy) # BxNxN
         
-        proj_value = self.value_conv(x).view(m_batchsize,-1,width*height) # B X C X N
-        out = torch.bmm(proj_value,attention.permute(0,2,1)) #B X C X N
-        out = out.view(m_batchsize,C,width,height) #B X C X W X H
+        proj_value = self.value_conv(x).view(m_batchsize, -1, width*height) # BxCxN
+        out = torch.bmm(proj_value,attention.permute(0,2,1)) #BxCxN
+        out = out.view(m_batchsize, C, width, height) #BxCxWxH
         
         #跨连，Gamma是需要学习的参数
-        out = self.gamma*out + x #B X C X W X H
+        out = self.gamma*out + x #BxCxWxH
         
         return out,attention
 
 
 def main():
-    x = torch.randn(size = (4,16,20,20))  
+    x = torch.randn(size=(4,16,20,20))
+    #print ('x=', x)
     self_atten_spatial = Self_Attn_Spatial(16,4)
     y = self_atten_spatial(x)
     print('y.size:',y[0].size())   
-    print y
+    #print ('x=', x)
+    #print y
     '''
     y.size: torch.Size([4, 16, 20, 20])
     '''
